@@ -1,8 +1,11 @@
-export const getFormattedDayName = (dateString: string): string => {
+export const getFormattedDayName = (dateString: Date): string => {
   const date = new Date(dateString);
+
   const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
   };
-  const dayName = date.toLocaleDateString("en-US", options).split(",")[0];
-  return dayName;
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+  return formattedDate;
 };

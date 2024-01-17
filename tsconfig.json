@@ -1,16 +1,16 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "*": ["/*"],
-      "@components/*": ["components/*"],
-      "@screens/*": ["screens/*"],
+      "@screens/*": ["./screens/*"]
     }
   },
   "include": [
     "app.d.ts",
     "screens/**/*.ts",
     "screens/**/*.tsx",
+    "screens/CurrentWeather/components/**/*.ts",
+    "screens/CurrentWeather/components/**/*.tsx"
   ]
 }

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Text, View } from "react-native";
 import { styled } from "nativewind";
 import { Entypo } from "@expo/vector-icons";
-import { IAirQuality } from "../../interfaces/IAirQuality";
+import { IAirQuality } from "../../../interfaces/IAirQuality";
 
 const TextInfo = styled(Text);
 const InfoView = styled(View);

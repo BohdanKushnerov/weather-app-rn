@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { IAirQualityProps } from "../../interfaces/IAirQualityProps";
+import { IAirQualityProps } from "../../../interfaces/IAirQualityProps";
 
 const sharedStyles = {
   mainContainer: "mb-4 p-4 rounded-lg bg-slate-300",
