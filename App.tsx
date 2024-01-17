@@ -1,11 +1,8 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { View } from "react-native";
 import { useFonts } from "expo-font";
-import { styled } from "nativewind";
 
 import CurrentWeather from "./screens/CurrentWeather/CurrentWeather";
-
-const AppView = styled(View);
 
 const App: FC = () => {
   const [fontsLoaded] = useFonts({
@@ -18,9 +15,9 @@ const App: FC = () => {
   if (!fontsLoaded) return null;
 
   return (
-    <AppView className="flex-1 items-center p-10">
+    <View>
       <CurrentWeather />
-    </AppView>
+    </View>
   );
 };
 

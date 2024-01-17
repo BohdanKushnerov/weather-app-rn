@@ -1,4 +1,4 @@
-const getTime = (date: Date) => {
+export const getTime = (date: Date) => {
   const lastUpdatedDate = new Date(date);
   return lastUpdatedDate.toLocaleTimeString("en-US", {
     hour12: false,
@@ -6,5 +6,3 @@ const getTime = (date: Date) => {
     minute: "2-digit",
   });
 };
-
-export default getTime;

@@ -1,4 +1,4 @@
-const formatDate = (time: Date) => {
+export const formatDate = (time: Date) => {
   const originalDate = new Date(time);
 
   const day = originalDate.getDate();

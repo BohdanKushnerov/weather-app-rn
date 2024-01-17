@@ -35,20 +35,20 @@ interface IAdditionalInfo {
 const AdditionalInfo: FC<IAdditionalInfo> = ({ currentWeather }) => {
   return (
     <InfoView className="flex flex-row flex-wrap gap-2 justify-center">
-      <TextInfo className="text-orange-300 text-xs font-medium leading-normal">
+      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
         Wind: {currentWeather.wind_kph} k/h {currentWeather.wind_dir}
-        <Entypo name="direction" size={16} color={'black'} />
+        <Entypo name="direction" size={16} color={"black"} />
       </TextInfo>
-      <TextInfo className="text-orange-300 text-xs font-medium leading-normal">
+      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
         Humidity: {currentWeather.humidity} %
       </TextInfo>
-      <TextInfo className="text-orange-300 text-xs font-medium leading-normal">
+      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
         UV Index: {currentWeather.uv}
       </TextInfo>
-      <TextInfo className="text-orange-300 text-xs font-medium leading-normal">
+      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
         Pressure: {currentWeather.pressure_mb} Mbar{" "}
       </TextInfo>
-      <TextInfo className="text-orange-300 text-xs font-medium leading-normal">
+      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
         Visibility: {currentWeather.vis_km} km{" "}
       </TextInfo>
     </InfoView>
