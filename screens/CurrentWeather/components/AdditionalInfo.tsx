@@ -13,7 +13,36 @@ interface IAdditionalInfo {
 
 const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
   return (
-    <View className="flex flex-row flex-wrap gap-2 justify-center">
+    <View className="flex flex-row flex-wrap gap-2 justify-center px-[16px]">
+      {/* Rain */}
+      <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <Ionicons name="rainy-outline" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Rain
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.forecast.forecastday[0].day.daily_chance_of_rain}%
+          </Text>
+        </View>
+      </View>
+      {/* Snow */}
+      <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <FontAwesome name="snowflake-o" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Snow
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.forecast.forecastday[0].day.daily_chance_of_snow}%
+          </Text>
+        </View>
+      </View>
+      {/* Wind */}
       <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
         <View className="p-1 bg-white rounded-full">
           <Feather name="wind" size={24} color="black" />
@@ -42,7 +71,7 @@ const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
         </View>
       </View>
       {/* UV Index */}
-      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+      <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-item">
         <View className="p-1 bg-white rounded-full">
           <Feather name="sun" size={24} color="black" />
         </View>
@@ -55,36 +84,9 @@ const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
           </Text>
         </View>
       </View>
-      {/* Rainy */}
-      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
-        <View className="p-1 bg-white rounded-full">
-          <Ionicons name="rainy-outline" size={24} color="black" />
-        </View>
-        <View>
-          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-            Rain
-          </Text>
-          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-            {weather.forecast.forecastday[0].day.daily_chance_of_rain}%
-          </Text>
-        </View>
-      </View>
-      {/* Snow */}
-      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
-        <View className="p-1 bg-white rounded-full">
-          <FontAwesome name="snowflake-o" size={24} color="black" />
-        </View>
-        <View>
-          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-            Snow
-          </Text>
-          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-            {weather.forecast.forecastday[0].day.daily_chance_of_snow}%
-          </Text>
-        </View>
-      </View>
+
       {/* Visibility */}
-      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+      <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-item">
         <View className="p-1 bg-white rounded-full">
           <MaterialIcons name="visibility" size={24} color="black" />
         </View>
@@ -98,7 +100,7 @@ const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
         </View>
       </View>
       {/* Humidity */}
-      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+      <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-item">
         <View className="p-1 bg-white rounded-full">
           <MaterialCommunityIcons
             name="air-humidifier"

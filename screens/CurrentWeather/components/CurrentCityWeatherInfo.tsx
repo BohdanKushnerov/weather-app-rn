@@ -11,7 +11,7 @@ interface ICurrentCityWeatherInfo {
 
 const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
   return (
-    <View className="flex-1 p-[16px] flex-col justify-between">
+    <View className="p-[16px] flex-col justify-between">
       <View>
         <Text className="font-[SoraBold] text-light text-3xl">
           {`${weather.location.name}, ${weather.location.country}`}

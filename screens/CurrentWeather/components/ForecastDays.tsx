@@ -17,7 +17,7 @@ const ForecastDays: FC<IForecastDaysProps> = ({ forecast }) => {
       </View>
 
       <View className="w-full mb-16">
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 15 }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
           {forecast.forecastday?.map((item: IForecastDay, index: number) => {
             return (
               <View

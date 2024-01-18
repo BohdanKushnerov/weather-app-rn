@@ -1,5 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import * as Location from "expo-location";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
@@ -16,6 +22,8 @@ import {
 import { IAirQuality } from "../../interfaces/IAirQuality";
 import AdditionalInfo from "./components/AdditionalInfo";
 import AirQuality from "./components/AirQuality";
+import HourlyForecast from "./components/HourForecast";
+import SelectWeatherButtons from "./components/SelectWeatherButtons";
 
 export interface ILocationWeather {
   name: string;
@@ -59,6 +67,59 @@ export interface ISearchLocation {
   url: string;
 }
 
+export interface IWeatherHour {
+  time_epoch: number;
+  time: Date;
+  temp_c: number;
+  temp_f: number;
+  is_day: number;
+  condition: {
+    text: string;
+    icon: string;
+    code: number;
+  };
+  wind_mph: number;
+  wind_kph: number;
+  wind_degree: number;
+  wind_dir: string;
+  pressure_mb: number;
+  pressure_in: number;
+  precip_mm: number;
+  precip_in: number;
+  snow_cm: number;
+  humidity: number;
+  cloud: number;
+  feelslike_c: number;
+  feelslike_f: number;
+  windchill_c: number;
+  windchill_f: number;
+  heatindex_c: number;
+  heatindex_f: number;
+  dewpoint_c: number;
+  dewpoint_f: number;
+  will_it_rain: number;
+  chance_of_rain: number;
+  will_it_snow: number;
+  chance_of_snow: number;
+  vis_km: number;
+  vis_miles: number;
+  gust_mph: number;
+  gust_kph: number;
+  uv: number;
+  air_quality: {
+    co: number;
+    no2: number;
+    o3: number;
+    so2: number;
+    pm2_5: number;
+    pm10: number;
+    "us-epa-index": number;
+    "gb-defra-index": number;
+  };
+  short_rad: number;
+  diff_rad: number;
+}
+
 export interface IForecastDay {
   date: Date;
   day: {
@@ -68,6 +129,7 @@ export interface IForecastDay {
     daily_chance_of_rain: number;
     daily_chance_of_snow: number;
   };
+  hour: IWeatherHour[];
 }
 
 export interface IForecastData {
@@ -86,7 +148,7 @@ function isForecastWeatherData(
   return (data as IForecastWeather).forecast !== undefined;
 }
 
-type WeatherType = "Today" | "Tomorrow" | "10 days";
+export type WeatherType = "Today" | "Tomorrow" | "10 days";
 
 const CurrentWeather: FC = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -145,71 +207,59 @@ const CurrentWeather: FC = () => {
   };
 
   return (
-    <View className="h-screen py-[6%] bg-ligth">
-      <View className="relative h-1/2 bg-gray-600 rounded-3xl">
-        <CityInput
-          showSearch={showSearch}
-          handleSearchLocations={handleSearchLocations}
-          handleToggleSearch={handleToggleSearch}
+    <SafeAreaView className="pt-[7%] bg-ligth">
+      <ScrollView
+        contentContainerStyle={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
+        <View className="relative bg-gray-600 rounded-3xl">
+          <CityInput
+            showSearch={showSearch}
+            handleSearchLocations={handleSearchLocations}
+            handleToggleSearch={handleToggleSearch}
+          />
+
+          {searchLocations && searchLocations.length > 0 && showSearch ? (
+            <CitiesList
+              searchLocations={searchLocations}
+              handleClickLocation={handleClickLocation}
+            />
+          ) : null}
+
+          {weather ? (
+            <CurrentCityWeatherInfo weather={weather} />
+          ) : (
+            <View>
+              <Text className="">Грузиться погода</Text>
+              <ActivityIndicator size="small" color="#00ff00" />
+            </View>
+          )}
+        </View>
+
+        <SelectWeatherButtons
+          selectedWeather={selectedWeather}
+          handleSelectWeather={handleSelectWeather}
         />
 
-        {searchLocations && searchLocations.length > 0 && showSearch ? (
-          <CitiesList
-            searchLocations={searchLocations}
-            handleClickLocation={handleClickLocation}
-          />
-        ) : null}
+        {weather && <AdditionalInfo weather={weather} />}
 
-        {weather ? (
-          <>
-            <CurrentCityWeatherInfo weather={weather} />
-          </>
-        ) : (
-          <View>
-            <Text className="">Грузиться погода</Text>
-            <ActivityIndicator size="small" color="#00ff00" />
-          </View>
-        )}
-      </View>
+        {weather && <HourlyForecast weather={weather} />}
 
-      {/* forecast for next days */}
-      {/* {weather && isForecastWeatherData(weather) && weather.forecast && (
+        {weather?.forecast && <ForecastDays forecast={weather?.forecast} />}
+
+        {/* forecast for next days */}
+        {/* {weather && isForecastWeatherData(weather) && weather.forecast && (
         <ForecastDays forecast={weather.forecast} />
       )} */}
 
-      <View className="flex-row justify-between p-[16px]">
-        <TouchableOpacity
-          className={`px-[35px] py-[9px] rounded-xl ${
-            selectedWeather === "Today" ? "bg-btnAccent" : "bg-white"
-          } `}
-          onPress={() => handleSelectWeather("Today")}
-        >
-          <Text>Today</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className={`px-[35px] py-[9px] rounded-xl ${
-            selectedWeather === "Tomorrow" ? "bg-btnAccent" : "bg-white"
-          } `}
-          onPress={() => handleSelectWeather("Tomorrow")}
-        >
-          <Text>Tomorrow</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className={`px-[35px] py-[9px] rounded-xl ${
-            selectedWeather === "10 days" ? "bg-btnAccent" : "bg-white"
-          } `}
-          onPress={() => handleSelectWeather("10 days")}
-        >
-          <Text>10 days</Text>
-        </TouchableOpacity>
-      </View>
+        {/* {weather && <AirQuality airQuality={weather.current.air_quality} />} */}
 
-      {weather && <AdditionalInfo weather={weather} />}
-
-      {/* {weather && <AirQuality airQuality={weather.current.air_quality} />} */}
-
-      <StatusBar style="dark" />
-    </View>
+        <StatusBar style="dark" />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
