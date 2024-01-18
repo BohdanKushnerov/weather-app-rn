@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import * as Location from "expo-location";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
@@ -14,6 +14,8 @@ import {
   fetchWeatherForecast,
 } from "../../api/weather";
 import { IAirQuality } from "../../interfaces/IAirQuality";
+import AdditionalInfo from "./components/AdditionalInfo";
+import AirQuality from "./components/AirQuality";
 
 export interface ILocationWeather {
   name: string;
@@ -84,6 +86,8 @@ function isForecastWeatherData(
   return (data as IForecastWeather).forecast !== undefined;
 }
 
+type WeatherType = "Today" | "Tomorrow" | "10 days";
+
 const CurrentWeather: FC = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
@@ -93,6 +97,7 @@ const CurrentWeather: FC = () => {
     ISearchLocation[] | null
   >(null);
   const [weather, setWeather] = useState<IForecastWeather | null>(null);
+  const [selectedWeather, setSelectedWeather] = useState<WeatherType>("Today");
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
@@ -117,10 +122,10 @@ const CurrentWeather: FC = () => {
 
   const handleSearchLocations = debounce((search: string) => {
     if (search && search.length > 2)
-      fetchLocations({ cityName: search, days: 7 }).then((data) => {
+      fetchLocations({ cityName: search, days: 1 }).then((data) => {
         setSearchLocations(data);
       });
-  }, 1200);
+  }, 1000);
 
   const handleToggleSearch = () => {
     setShowSearch(!showSearch);
@@ -129,15 +134,19 @@ const CurrentWeather: FC = () => {
   const handleClickLocation = (location: ISearchLocation) => {
     const { name } = location;
 
-    fetchWeatherForecast({ cityName: name, days: 7 }).then((data) => {
+    fetchWeatherForecast({ cityName: name, days: 1 }).then((data) => {
       setWeather(data);
       handleToggleSearch();
     });
   };
 
+  const handleSelectWeather = (selectedWeather: WeatherType) => {
+    setSelectedWeather(selectedWeather);
+  };
+
   return (
-    <SafeAreaView className="h-screen py-[7%] bg-zinc-800">
-      <View className="relative">
+    <View className="h-screen py-[6%] bg-ligth">
+      <View className="relative h-1/2 bg-gray-600 rounded-3xl">
         <CityInput
           showSearch={showSearch}
           handleSearchLocations={handleSearchLocations}
@@ -150,75 +159,58 @@ const CurrentWeather: FC = () => {
             handleClickLocation={handleClickLocation}
           />
         ) : null}
+
+        {weather ? (
+          <>
+            <CurrentCityWeatherInfo weather={weather} />
+          </>
+        ) : (
+          <View>
+            <Text className="">Грузиться погода</Text>
+            <ActivityIndicator size="small" color="#00ff00" />
+          </View>
+        )}
       </View>
 
-      {weather ? (
-        <>
-          <CurrentCityWeatherInfo weather={weather} />
-          {/* <AirQuality airQuality={weather.current.air_quality} /> */}
-        </>
-      ) : (
-        <View>
-          <Text>Давай ищи погоду для начала, потому что не пришла</Text>
-        </View>
-      )}
-
       {/* forecast for next days */}
-      {weather && isForecastWeatherData(weather) && weather.forecast && (
+      {/* {weather && isForecastWeatherData(weather) && weather.forecast && (
         <ForecastDays forecast={weather.forecast} />
-      )}
+      )} */}
+
+      <View className="flex-row justify-between p-[16px]">
+        <TouchableOpacity
+          className={`px-[35px] py-[9px] rounded-xl ${
+            selectedWeather === "Today" ? "bg-btnAccent" : "bg-white"
+          } `}
+          onPress={() => handleSelectWeather("Today")}
+        >
+          <Text>Today</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className={`px-[35px] py-[9px] rounded-xl ${
+            selectedWeather === "Tomorrow" ? "bg-btnAccent" : "bg-white"
+          } `}
+          onPress={() => handleSelectWeather("Tomorrow")}
+        >
+          <Text>Tomorrow</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className={`px-[35px] py-[9px] rounded-xl ${
+            selectedWeather === "10 days" ? "bg-btnAccent" : "bg-white"
+          } `}
+          onPress={() => handleSelectWeather("10 days")}
+        >
+          <Text>10 days</Text>
+        </TouchableOpacity>
+      </View>
+
+      {weather && <AdditionalInfo weather={weather} />}
+
+      {/* {weather && <AirQuality airQuality={weather.current.air_quality} />} */}
 
       <StatusBar style="dark" />
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default CurrentWeather;
-
-{
-  /* <FlatList
-  data={weather?.forecast?.forecastday}
-  renderItem={({ item }) => {
-    const date = new Date(item.date);
-    const options = { weekday: "long" };
-    let dayName = date.toLocaleDateString("en-US", options);
-    dayName = dayName.split(",")[0];
-
-    return (
-      <>
-        <View
-          // key={index}  // 'key' should not be used inside FlatList
-          className="flex justify-center items-center w-24 rounded-3xl py-3 space-y-1 mr-4"
-          // style={{ backgroundColor: theme.bgWhite(0.15) }}
-        >
-          <Image
-            // source={{uri: 'https:'+item?.day?.condition?.icon}}
-            source={{ uri: `https:${item?.day?.condition?.icon}` }}
-            className="w-11 h-11"
-          />
-          <Text className="text-white">{dayName}</Text>
-          <Text className="text-white text-xl font-semibold">
-            {item?.day?.avgtemp_c}&#176;
-          </Text>
-        </View>
-        <View
-          // key={index}  // 'key' should not be used inside FlatList
-          className="flex justify-center items-center w-24 rounded-3xl py-3 space-y-1 mr-4"
-          // style={{ backgroundColor: theme.bgWhite(0.15) }}
-        >
-          <Image
-            // source={{uri: 'https:'+item?.day?.condition?.icon}}
-            source={{ uri: `https:${item?.day?.condition?.icon}` }}
-            className="w-11 h-11"
-          />
-          <Text className="text-white">{dayName}</Text>
-          <Text className="text-white text-xl font-semibold">
-            {item?.day?.avgtemp_c}&#176;
-          </Text>
-        </View>
-      </>
-    );
-  }}
-  keyExtractor={(item) => item.date}
-/>; */
-}

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useFonts } from "expo-font";
 
 import CurrentWeather from "./screens/CurrentWeather/CurrentWeather";
@@ -16,7 +16,11 @@ const App: FC = () => {
 
   return (
     <View>
-      <CurrentWeather />
+      {fontsLoaded ? (
+        <CurrentWeather />
+      ) : (
+        <ActivityIndicator size="small" color="greenLoader" />
+      )}
     </View>
   );
 };

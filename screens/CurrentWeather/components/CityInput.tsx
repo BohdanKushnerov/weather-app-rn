@@ -14,14 +14,14 @@ const CityInput: FC<ICityInput> = ({
   handleToggleSearch,
 }) => {
   return (
-    <View className="relative h-10 flex-row justify-end items-center rounded-full">
+    <View className="absolute top-1 right-0 w-full z-10 h-12 flex-row justify-end items-center rounded-full">
       {showSearch ? (
         <TextInput
           autoFocus={true}
           onChangeText={handleSearchLocations}
           placeholder="Search city"
-          placeholderTextColor={"lightgray"}
-          className="pl-6 h-10 pb-1 flex-1 text-base text-white bg-slate-400 rounded-full"
+          placeholderTextColor={"white"}
+          className="pl-6 h-12 pb-1 flex-1 text-base bg-inherit rounded-full bg-purple-500 font-[SoraBold] placeholder:text-2xl text-light"
         />
       ) : null}
 
@@ -30,9 +30,9 @@ const CityInput: FC<ICityInput> = ({
         className="absolute rounded-full p-3 m-1"
       >
         {showSearch ? (
-          <Fontisto name="close" size={24} color="black" />
+          <Fontisto name="close" size={24} color="white" />
         ) : (
-          <Fontisto name="search" size={24} color="black" />
+          <Fontisto name="search" size={24} color="white" />
         )}
       </TouchableOpacity>
     </View>

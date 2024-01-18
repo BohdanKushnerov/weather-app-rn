@@ -2,10 +2,7 @@
 // import nativewind from "nativewind/tailwind/native";
 
 module.exports = {
-  content: [
-    "./App.{js,jsx,ts,tsx}",
-    "./screens/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./App.{js,jsx,ts,tsx}", "./screens/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       fontFamily: {
@@ -15,13 +12,17 @@ module.exports = {
         SoraBold: ["Sora-Bold", "sans-serif"],
       },
       backgroundColor: {
-        rosyBrown: "#AC736A",
+        // rosyBrown: "#AC736A",
+        ligth: "#F6EDFF",
+        dark: "rgb(55 65 81)",
       },
-      // colors: {
-      //   PeachPuff: "#F6C8A4",
-      // },
       colors: {
-        peachPuff: "#F6C8A4",
+        light: "#FFFFFF",
+        dark: "#AAAAAA",
+        greenLoader: "#00ff00",
+        btn: "#FFFFFF",
+        btnAccent: "#E0B6FF",
+        item: "rgba(208, 188, 255, 0.3)",
       },
     },
   },

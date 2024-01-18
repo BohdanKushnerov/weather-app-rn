@@ -1,57 +1,121 @@
 import { FC } from "react";
 import { Text, View } from "react-native";
-import { styled } from "nativewind";
-import { Entypo } from "@expo/vector-icons";
-import { IAirQuality } from "../../../interfaces/IAirQuality";
-
-const TextInfo = styled(Text);
-const InfoView = styled(View);
+import { IForecastWeather } from "../CurrentWeather";
+import { Feather } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 interface IAdditionalInfo {
-  currentWeather: {
-    last_updated: Date;
-    temp_c: number;
-    temp_f: number;
-    condition: {
-      text: string;
-      icon: string;
-      code: number;
-    };
-    wind_mph: number;
-    wind_kph: number;
-    wind_dir: string;
-    pressure_mb: number;
-    pressure_in: number;
-    humidity: number;
-    feelslike_c: number;
-    feelslike_f: number;
-    vis_km: number;
-    vis_miles: number;
-    uv: number;
-    air_quality: IAirQuality;
-  };
+  weather: IForecastWeather;
 }
 
-const AdditionalInfo: FC<IAdditionalInfo> = ({ currentWeather }) => {
+const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
   return (
-    <InfoView className="flex flex-row flex-wrap gap-2 justify-center">
-      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
-        Wind: {currentWeather.wind_kph} k/h {currentWeather.wind_dir}
-        <Entypo name="direction" size={16} color={"black"} />
-      </TextInfo>
-      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
-        Humidity: {currentWeather.humidity} %
-      </TextInfo>
-      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
-        UV Index: {currentWeather.uv}
-      </TextInfo>
-      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
-        Pressure: {currentWeather.pressure_mb} Mbar{" "}
-      </TextInfo>
-      <TextInfo className="text-peachPuff text-xs font-medium leading-normal">
-        Visibility: {currentWeather.vis_km} km{" "}
-      </TextInfo>
-    </InfoView>
+    <View className="flex flex-row flex-wrap gap-2 justify-center">
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <Feather name="wind" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Wind speed:
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.current.wind_kph} k/h
+          </Text>
+        </View>
+      </View>
+      {/* Pressure */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <MaterialCommunityIcons name="gauge" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Pressure
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.current.pressure_mb} Mbar
+          </Text>
+        </View>
+      </View>
+      {/* UV Index */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <Feather name="sun" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            UV Index
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.current.uv}
+          </Text>
+        </View>
+      </View>
+      {/* Rainy */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <Ionicons name="rainy-outline" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Rain
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.forecast.forecastday[0].day.daily_chance_of_rain}%
+          </Text>
+        </View>
+      </View>
+      {/* Snow */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <FontAwesome name="snowflake-o" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Snow
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.forecast.forecastday[0].day.daily_chance_of_snow}%
+          </Text>
+        </View>
+      </View>
+      {/* Visibility */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <MaterialIcons name="visibility" size={24} color="black" />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Visibility
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.current.vis_km} km
+          </Text>
+        </View>
+      </View>
+      {/* Humidity */}
+      <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-item">
+        <View className="p-1 bg-white rounded-full">
+          <MaterialCommunityIcons
+            name="air-humidifier"
+            size={24}
+            color="black"
+          />
+        </View>
+        <View>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            Humidity
+          </Text>
+          <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+            {weather.current.humidity}%
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 };
 

@@ -13,7 +13,7 @@ const CitiesList: FC<ICitiesList> = ({
   handleClickLocation,
 }) => {
   return (
-    <View className="absolute top-20 z-10 w-full bg-gray-300 rounded-3xl">
+    <View className="absolute top-12 z-10 w-full bg-gray-300 rounded-3xl">
       {searchLocations.map((loc, index) => {
         const showBorder = index + 1 != searchLocations.length;
         const borderClass = showBorder ? " border-b-2 border-b-gray-400" : "";

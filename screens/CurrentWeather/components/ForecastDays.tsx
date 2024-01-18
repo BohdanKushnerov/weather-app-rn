@@ -13,7 +13,7 @@ const ForecastDays: FC<IForecastDaysProps> = ({ forecast }) => {
     <View className="h-1/2 mb-2 space-y-3 z-30 bg-zinc-600">
       <View className="flex-row justify-center items-center mx-5 space-x-2">
         <Fontisto name="calendar" size={16} color="white" />
-        <Text className="text-white text-base">Daily forecast</Text>
+        <Text className="text-light text-base">Daily forecast</Text>
       </View>
 
       <View className="w-full mb-16">
@@ -31,22 +31,22 @@ const ForecastDays: FC<IForecastDaysProps> = ({ forecast }) => {
                     }}
                     className="w-11 h-11"
                   />
-                  <Text className="font-[SoraMedium] text-white">
+                  <Text className="font-[SoraMedium] text-light">
                     {getFormattedDayName(item.date)}
                   </Text>
-                  <Text className="font-[SoraMedium] text-white">
+                  <Text className="font-[SoraMedium] text-light">
                     Rain: {item?.day?.daily_chance_of_rain}%
                   </Text>
-                  <Text className="font-[SoraMedium] text-white">
+                  <Text className="font-[SoraMedium] text-light">
                     Snow: {item?.day?.daily_chance_of_snow}%
                   </Text>
                 </View>
                 <View className="flex flex-row">
-                  <Text className="font-[SoraBold] text-white text-xl">
+                  <Text className="font-[SoraBold] text-light text-xl">
                     {item?.day?.maxtemp_c}&#176;
                   </Text>
-                  <Text className="font-[SoraBold] text-white text-xl">/</Text>
-                  <Text className="font-[SoraBold] text-white text-xl">
+                  <Text className="font-[SoraBold] text-light text-xl">/</Text>
+                  <Text className="font-[SoraBold] text-light text-xl">
                     {item?.day?.mintemp_c}&#176;
                   </Text>
                 </View>
