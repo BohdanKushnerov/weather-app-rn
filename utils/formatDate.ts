@@ -22,5 +22,3 @@ export const formatDate = (time: Date) => {
 
   return `${day} ${monthNames[monthIndex]} ${year}`;
 };
-
-export default formatDate;

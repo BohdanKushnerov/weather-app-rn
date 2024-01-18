@@ -1,15 +1,14 @@
 import React, { FC } from "react";
 import { Image, Text, View } from "react-native";
-
 import { IForecastWeather } from "../CurrentWeather";
-import { formatDate } from "../../../utils/formatDate";
 import { getTime } from "../../../utils/getTime";
+import { formatDate } from "../../../utils/formatDate";
 
-interface ICurrentCityWeatherInfo {
+interface ITomorrowCityWeather {
   weather: IForecastWeather;
 }
 
-const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
+const TomorrowCityWeather: FC<ITomorrowCityWeather> = ({ weather }) => {
   return (
     <View className="p-[16px] flex-col gap-y-10">
       <View>
@@ -24,32 +23,34 @@ const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
 
       <View className="flex-row justify-between items-baseline">
         <View className="flex-col">
+          <Text className="max-w-[150px] font-[SoraSemiBold] text-center text-light text-2xl">
+            Average temperature:
+          </Text>
+
           <View className="flex-row">
             <Text className="pt-[12px] font-[SoraBold] text-light text-8xl">
-              {weather.current.temp_c}
+              {weather.forecast.forecastday[0].day.avgtemp_c}
             </Text>
             <Text className="text-light text-7xl">&#176;</Text>
           </View>
-
-          <Text className="font-[SoraSemiBold] text-2xl text-light">
-            Feels like: {weather.current.feelslike_c}&#176;
-          </Text>
         </View>
 
         <View className="max-w-[150px] flex-col items-center">
           <Image
             className="w-[128px] h-[128px]"
-            source={{ uri: `https:${weather.current.condition.icon}` }}
+            source={{
+              uri: `https:${weather.forecast.forecastday[0].day.condition.icon}`,
+            }}
           />
-          <Text className="font-[SoraSemiBold] text-light text-2xl">
-            {weather.current.condition.text}
+          <Text className="font-[SoraSemiBold] text-center text-light text-2xl">
+            {weather.forecast.forecastday[0].day.condition.text}
           </Text>
         </View>
       </View>
 
       <View className="flex-row justify-between items-end">
         <Text className="font-[SoraMedium] text-light text-xl">
-          {formatDate(weather.location.localtime)}
+          {formatDate(weather.forecast.forecastday[0].date)}
         </Text>
         <View>
           <Text className="font-[SoraSemiBold] text-light text-2xl">
@@ -64,4 +65,4 @@ const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
   );
 };
 
-export default CurrentCityWeatherInfo;
+export default TomorrowCityWeather;

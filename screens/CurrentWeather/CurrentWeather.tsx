@@ -24,6 +24,7 @@ import AdditionalInfo from "./components/AdditionalInfo";
 import AirQuality from "./components/AirQuality";
 import HourlyForecast from "./components/HourForecast";
 import SelectWeatherButtons from "./components/SelectWeatherButtons";
+import TomorrowCityWeather from "./components/TomorrowCityWeather";
 
 export interface ILocationWeather {
   name: string;
@@ -125,6 +126,7 @@ export interface IForecastDay {
   day: {
     maxtemp_c: number;
     mintemp_c: number;
+    avgtemp_c: number;
     condition: IConditionWeather;
     daily_chance_of_rain: number;
     daily_chance_of_snow: number;
@@ -158,8 +160,14 @@ const CurrentWeather: FC = () => {
   const [searchLocations, setSearchLocations] = useState<
     ISearchLocation[] | null
   >(null);
+  const [currentSearchLocation, setCurrentSearchLocation] = useState<
+    string | null
+  >(null);
   const [weather, setWeather] = useState<IForecastWeather | null>(null);
   const [selectedWeather, setSelectedWeather] = useState<WeatherType>("Today");
+
+  const [tomorrowWeather, setTomorrowWeather] =
+    useState<IForecastWeather | null>(null);
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
@@ -174,13 +182,63 @@ const CurrentWeather: FC = () => {
 
   // if (location) current weather in current location
   useEffect(() => {
-    if (location) {
+    if (location && selectedWeather === "Today") {
       const { latitude, longitude } = location.coords;
-      fetchWeatherCurrent({ latitude, longitude }).then((data) => {
+      fetchWeatherCurrent({ latitude, longitude, days: 1 }).then((data) => {
         setWeather(data);
       });
     }
   }, [location]);
+
+  useEffect(() => {
+    if (selectedWeather === "Tomorrow" && !currentSearchLocation) {
+      // тут искать погоду по твоей геолокации на завтра
+      if (location) {
+        console.log("тут искать погоду по твоей геолокации на завтра");
+        const { latitude, longitude } = location.coords;
+        fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
+          const secondDayForecast: IForecastDay[] = [
+            data.forecast.forecastday[1],
+          ];
+
+          const tomorrowForecast = {
+            location: data.location,
+            current: data.current,
+            forecast: {
+              forecastday: secondDayForecast,
+            },
+          };
+
+          setTomorrowWeather(tomorrowForecast);
+          // const secondWeatherForecast = {
+          //   location: data.location,
+          //   current: data.current,
+          //   forecast: {
+          //     forecastday: secondDayForecast,
+          //   },
+          // };
+          // console.log('1')
+          // console.log("data", data);
+        });
+      }
+    } else if (selectedWeather === "Tomorrow" && currentSearchLocation) {
+      console.log(
+        "тут искать погоду на завтра по локации что была в поиске на завтра"
+      );
+
+      // тут искать погоду на завтра по локации что была в поиске на завтра
+    } else if (selectedWeather === "10 days" && !currentSearchLocation) {
+      console.log("тут искать погоду по твоей геолокации на 10 дней");
+
+      // тут искать погоду по твоей геолокации на 10 дней
+    } else if (selectedWeather === "10 days" && currentSearchLocation) {
+      console.log(
+        "тут искать погоду на завтра по локации что была в поиске на 10 дней"
+      );
+
+      // тут искать погоду на завтра по локации что была в поиске на 10 дней
+    }
+  }, [selectedWeather, currentSearchLocation]);
 
   const handleSearchLocations = debounce((search: string) => {
     if (search && search.length > 2)
@@ -198,6 +256,8 @@ const CurrentWeather: FC = () => {
 
     fetchWeatherForecast({ cityName: name, days: 1 }).then((data) => {
       setWeather(data);
+      setSelectedWeather("Today");
+      setCurrentSearchLocation(name);
       handleToggleSearch();
     });
   };
@@ -215,7 +275,7 @@ const CurrentWeather: FC = () => {
           gap: 16,
         }}
       >
-        <View className="relative bg-gray-600 rounded-3xl">
+        <View className="relative h-auto bg-gray-600 rounded-3xl">
           <CityInput
             showSearch={showSearch}
             handleSearchLocations={handleSearchLocations}
@@ -229,9 +289,15 @@ const CurrentWeather: FC = () => {
             />
           ) : null}
 
-          {weather ? (
+          {weather && selectedWeather === "Today" && (
             <CurrentCityWeatherInfo weather={weather} />
-          ) : (
+          )}
+
+          {tomorrowWeather && selectedWeather === "Tomorrow" && (
+            <TomorrowCityWeather weather={tomorrowWeather} />
+          )}
+
+          {!weather && (
             <View>
               <Text className="">Грузиться погода</Text>
               <ActivityIndicator size="small" color="#00ff00" />
@@ -248,7 +314,8 @@ const CurrentWeather: FC = () => {
 
         {weather && <HourlyForecast weather={weather} />}
 
-        {weather?.forecast && <ForecastDays forecast={weather?.forecast} />}
+        {/* 7 days  */}
+        {/* {weather?.forecast && <ForecastDays forecast={weather?.forecast} />} */}
 
         {/* forecast for next days */}
         {/* {weather && isForecastWeatherData(weather) && weather.forecast && (
