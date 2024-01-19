@@ -1,8 +1,16 @@
-import { FC, MutableRefObject, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ImageBackground,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   Text,
@@ -14,11 +22,12 @@ import * as Location from "expo-location";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 import ForecastDays from "./components/ForecastDays";
 import CityInput from "./components/CityInput";
 import CitiesList from "./components/CitiesList";
-import CurrentCityWeatherInfo from "./components/CurrentCityWeatherInfo";
+import LocationCityWeatherInfo from "./components/LocationCityWeatherInfo";
 import {
   fetchLocations,
   fetchWeatherCurrent,
@@ -169,6 +178,15 @@ const CurrentWeather: FC = () => {
     string | null
   >(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -288,10 +306,17 @@ const CurrentWeather: FC = () => {
   }, [selectedWeather, currentSearchLocation]);
 
   const handleSearchLocations = debounce((search: string) => {
-    if (search && search.length > 2)
-      fetchLocations({ cityName: search, days: 1 }).then((data) => {
-        setSearchLocations(data);
-      });
+    if (search && search.length > 2) {
+      setIsLoading(true);
+
+      fetchLocations({ cityName: search.trim(), days: 1 })
+        .then((data) => {
+          setSearchLocations(data);
+          setIsLoading(false);
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => setIsLoading(false));
+    }
   }, 1000);
 
   const handleToggleSearch = () => {
@@ -301,12 +326,15 @@ const CurrentWeather: FC = () => {
   const handleClickLocation = (location: ISearchLocation) => {
     const { name } = location;
 
+    setIsLoading(true);
+
     fetchWeatherForecast({ cityName: name, days: 1 }).then((data) => {
       setWeather(data);
       setCurrentSearchLocation(name);
       setSelectedWeather("Today");
       setTomorrowWeather(null);
       setTenDays(null);
+      setIsLoading(false);
       handleToggleSearch();
       scrollToTop();
     });
@@ -329,22 +357,35 @@ const CurrentWeather: FC = () => {
 
   return (
     <SafeAreaView className="relative h-screen bg-green-100">
-        <CityInput
-          showSearch={showSearch}
-          handleSearchLocations={handleSearchLocations}
-          handleToggleSearch={handleToggleSearch}
-        />
-        {searchLocations && searchLocations.length > 0 && showSearch ? (
-          <CitiesList
-            searchLocations={searchLocations}
-            handleClickLocation={handleClickLocation}
+      {/* Input + menu */}
+      <View className="absolute top-7 right-0 w-full px-1 z-10 flex flex-row items-center justify-end">
+        <View className="relative flex-1">
+          <CityInput
+            isLoading={isLoading}
+            showSearch={showSearch}
+            handleSearchLocations={handleSearchLocations}
+            handleToggleSearch={handleToggleSearch}
           />
-        ) : null}
+          {searchLocations && searchLocations.length > 0 && showSearch ? (
+            <CitiesList
+              searchLocations={searchLocations}
+              handleClickLocation={handleClickLocation}
+            />
+          ) : null}
+        </View>
+
+        <TouchableOpacity className="" onPress={scrollToTop}>
+          <Entypo name="menu" size={36} color="white" />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView
         ref={scrollViewRef}
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
@@ -363,7 +404,7 @@ const CurrentWeather: FC = () => {
         >
           <View className="relative rounded-3xl">
             {(selectedWeather === "Today" || selectedWeather === "10 days") && (
-              <CurrentCityWeatherInfo weather={weather} />
+              <LocationCityWeatherInfo weather={weather} />
             )}
 
             {selectedWeather === "Tomorrow" && (
@@ -377,6 +418,7 @@ const CurrentWeather: FC = () => {
           handleSelectWeather={handleSelectWeather}
         />
 
+        {/* Today */}
         {selectedWeather === "Today" && (
           <View
             style={{
@@ -393,6 +435,7 @@ const CurrentWeather: FC = () => {
           </View>
         )}
 
+        {/* Tomorrow */}
         {selectedWeather === "Tomorrow" && (
           <View
             style={{
@@ -417,6 +460,7 @@ const CurrentWeather: FC = () => {
         <StatusBar style="light" />
       </ScrollView>
 
+      {/* Scroll button  */}
       {isScrolling && (
         <TouchableOpacity
           className="absolute bottom-0 right-0 p-4"

@@ -5,11 +5,11 @@ import { IForecastWeather } from "../CurrentWeather";
 import { formatDate } from "../../../utils/formatDate";
 import { getTime } from "../../../utils/getTime";
 
-interface ICurrentCityWeatherInfo {
+interface ILocationCityWeatherInfo {
   weather: IForecastWeather | null;
 }
 
-const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
+const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
   return (
     <>
       {weather ? (
@@ -72,4 +72,4 @@ const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
   );
 };
 
-export default CurrentCityWeatherInfo;
+export default LocationCityWeatherInfo;
