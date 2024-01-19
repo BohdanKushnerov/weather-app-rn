@@ -1,6 +1,11 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { FC } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { ISearchLocation } from "../CurrentWeather";
 
 interface ICitiesList {
@@ -13,7 +18,7 @@ const CitiesList: FC<ICitiesList> = ({
   handleClickLocation,
 }) => {
   return (
-    <View className="absolute top-12 z-10 w-full bg-gray-300 rounded-3xl">
+    <View className="absolute top-20 z-10 w-full bg-gray-300 rounded-3xl">
       {searchLocations.map((loc, index) => {
         const showBorder = index + 1 != searchLocations.length;
         const borderClass = showBorder ? " border-b-2 border-b-gray-400" : "";
@@ -21,14 +26,24 @@ const CitiesList: FC<ICitiesList> = ({
           <TouchableOpacity
             key={index}
             onPress={() => handleClickLocation(loc)}
-            className={
-              "flex-row items-center border-0 p-3 px-4 mb-1 " + borderClass
-            }
+            // className={
+            //   "flex-row items-center border-0 p-3 px-4 mb-1 " + borderClass
+            // }
           >
-            <MaterialCommunityIcons name="map-marker" size={24} color="gray" />
-            <Text className="text-black text-lg ml-2">
-              {loc?.name}, {loc?.country}
-            </Text>
+            <View
+              className={
+                "flex-row items-center border-0 p-3 px-4 mb-1 " + borderClass
+              }
+            >
+              <MaterialCommunityIcons
+                name="map-marker"
+                size={24}
+                color="gray"
+              />
+              <Text className="text-black text-lg ml-2">
+                {loc?.name}, {loc?.country}
+              </Text>
+            </View>
           </TouchableOpacity>
         );
       })}

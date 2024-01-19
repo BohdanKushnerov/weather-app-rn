@@ -15,7 +15,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
     <View className="flex-row justify-between px-[16px]">
       <TouchableOpacity
         className={`px-[35px] py-[9px] rounded-xl ${
-          selectedWeather === "Today" ? "bg-btnAccent" : "bg-white"
+          selectedWeather === "Today" ? "bg-green-400" : "bg-white"
         } `}
         onPress={() => handleSelectWeather("Today")}
       >
@@ -23,7 +23,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
       </TouchableOpacity>
       <TouchableOpacity
         className={`px-[35px] py-[9px] rounded-xl ${
-          selectedWeather === "Tomorrow" ? "bg-btnAccent" : "bg-white"
+          selectedWeather === "Tomorrow" ? "bg-green-400" : "bg-white"
         } `}
         onPress={() => handleSelectWeather("Tomorrow")}
       >
@@ -31,7 +31,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
       </TouchableOpacity>
       <TouchableOpacity
         className={`px-[35px] py-[9px] rounded-xl ${
-          selectedWeather === "10 days" ? "bg-btnAccent" : "bg-white"
+          selectedWeather === "10 days" ? "bg-green-400" : "bg-white"
         } `}
         onPress={() => handleSelectWeather("10 days")}
       >

@@ -14,14 +14,14 @@ const CityInput: FC<ICityInput> = ({
   handleToggleSearch,
 }) => {
   return (
-    <View className="absolute top-1 right-0 w-full z-10 h-12 flex-row justify-end items-center rounded-full">
+    <View className="absolute top-6 right-0 w-full z-10 h-12 flex-row justify-end items-center rounded-full">
       {showSearch ? (
         <TextInput
           autoFocus={true}
           onChangeText={handleSearchLocations}
           placeholder="Search city"
           placeholderTextColor={"white"}
-          className="pl-6 h-12 pb-1 flex-1 text-base bg-inherit rounded-full bg-purple-500 font-[SoraBold] placeholder:text-2xl text-light"
+          className="pl-6 h-12 pb-1 flex-1 text-base bg-inherit rounded-full bg-pink-300 font-[SoraBold] placeholder:text-2xl text-light"
         />
       ) : null}
 

@@ -36,7 +36,6 @@ export const fetchWeatherCurrent = (params: {
   days: number;
 }) => {
   let forecastUrl = currentEndpoint(params);
-  console.log(forecastUrl)
   return apiCall(forecastUrl);
 };
 

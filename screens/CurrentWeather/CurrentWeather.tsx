@@ -1,14 +1,19 @@
-import { FC, useEffect, useState } from "react";
+import { FC, MutableRefObject, useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
+  ImageBackground,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   SafeAreaView,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import * as Location from "expo-location";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
+import { Feather } from "@expo/vector-icons";
 
 import ForecastDays from "./components/ForecastDays";
 import CityInput from "./components/CityInput";
@@ -19,12 +24,12 @@ import {
   fetchWeatherCurrent,
   fetchWeatherForecast,
 } from "../../api/weather";
-import { IAirQuality } from "../../interfaces/IAirQuality";
 import AdditionalInfo from "./components/AdditionalInfo";
 import AirQuality from "./components/AirQuality";
 import HourlyForecast from "./components/HourForecast";
 import SelectWeatherButtons from "./components/SelectWeatherButtons";
 import TomorrowCityWeather from "./components/TomorrowCityWeather";
+import { IAirQuality } from "../../interfaces/IAirQuality";
 
 export interface ILocationWeather {
   name: string;
@@ -144,30 +149,31 @@ export interface IForecastWeather {
   forecast: IForecastData;
 }
 
-function isForecastWeatherData(
-  data: IForecastWeather
-): data is IForecastWeather {
-  return (data as IForecastWeather).forecast !== undefined;
-}
-
 export type WeatherType = "Today" | "Tomorrow" | "10 days";
 
 const CurrentWeather: FC = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
-  const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [selectedWeather, setSelectedWeather] = useState<WeatherType>("Today");
+  const [weather, setWeather] = useState<IForecastWeather | null>(null);
+  const [tomorrowWeather, setTomorrowWeather] =
+    useState<IForecastWeather | null>(null);
+  const [tenDays, setTenDays] = useState<IForecastWeather | null>(null);
+
   const [searchLocations, setSearchLocations] = useState<
     ISearchLocation[] | null
   >(null);
+  const [showSearch, setShowSearch] = useState<boolean>(false);
   const [currentSearchLocation, setCurrentSearchLocation] = useState<
     string | null
   >(null);
-  const [weather, setWeather] = useState<IForecastWeather | null>(null);
-  const [selectedWeather, setSelectedWeather] = useState<WeatherType>("Today");
+  const [isScrolling, setIsScrolling] = useState(false);
 
-  const [tomorrowWeather, setTomorrowWeather] =
-    useState<IForecastWeather | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const windowDimensions = useWindowDimensions();
+  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
@@ -190,11 +196,24 @@ const CurrentWeather: FC = () => {
     }
   }, [location]);
 
+  // currentSearchLocation && "Today"
   useEffect(() => {
-    if (selectedWeather === "Tomorrow" && !currentSearchLocation) {
+    if (currentSearchLocation && selectedWeather === "Today") {
+      fetchWeatherForecast({ cityName: currentSearchLocation, days: 1 }).then(
+        (data) => {
+          setWeather(data);
+        }
+      );
+    }
+  }, [currentSearchLocation]);
+
+  // "Tomorrow";
+  useEffect(() => {
+    if (selectedWeather !== "Tomorrow") return;
+    if (!currentSearchLocation) {
       // тут искать погоду по твоей геолокации на завтра
+      console.log("тут искать погоду по твоей геолокации на завтра");
       if (location) {
-        console.log("тут искать погоду по твоей геолокации на завтра");
         const { latitude, longitude } = location.coords;
         fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
           const secondDayForecast: IForecastDay[] = [
@@ -210,33 +229,61 @@ const CurrentWeather: FC = () => {
           };
 
           setTomorrowWeather(tomorrowForecast);
-          // const secondWeatherForecast = {
-          //   location: data.location,
-          //   current: data.current,
-          //   forecast: {
-          //     forecastday: secondDayForecast,
-          //   },
-          // };
-          // console.log('1')
-          // console.log("data", data);
         });
       }
-    } else if (selectedWeather === "Tomorrow" && currentSearchLocation) {
+    } else {
+      // тут искать погоду на завтра по локации что была в поиске на завтра
+
       console.log(
         "тут искать погоду на завтра по локации что была в поиске на завтра"
       );
 
-      // тут искать погоду на завтра по локации что была в поиске на завтра
-    } else if (selectedWeather === "10 days" && !currentSearchLocation) {
+      fetchWeatherForecast({ cityName: currentSearchLocation, days: 2 }).then(
+        (data) => {
+          const secondDayForecast: IForecastDay[] = [
+            data.forecast.forecastday[1],
+          ];
+
+          const tomorrowForecast = {
+            location: data.location,
+            current: data.current,
+            forecast: {
+              forecastday: secondDayForecast,
+            },
+          };
+
+          setTomorrowWeather(tomorrowForecast);
+        }
+      );
+    }
+  }, [selectedWeather, currentSearchLocation]);
+
+  // "10 days"
+  useEffect(() => {
+    if (selectedWeather !== "10 days") return;
+
+    if (!currentSearchLocation) {
+      // тут искать погоду по твоей геолокации на 10 дней
       console.log("тут искать погоду по твоей геолокации на 10 дней");
 
-      // тут искать погоду по твоей геолокации на 10 дней
-    } else if (selectedWeather === "10 days" && currentSearchLocation) {
+      if (location) {
+        const { latitude, longitude } = location.coords;
+        fetchWeatherCurrent({ latitude, longitude, days: 10 }).then((data) => {
+          setTenDays(data);
+        });
+      }
+    } else {
       console.log(
         "тут искать погоду на завтра по локации что была в поиске на 10 дней"
       );
-
       // тут искать погоду на завтра по локации что была в поиске на 10 дней
+
+      fetchWeatherForecast({
+        cityName: currentSearchLocation,
+        days: 10,
+      }).then((data) => {
+        setTenDays(data);
+      });
     }
   }, [selectedWeather, currentSearchLocation]);
 
@@ -256,9 +303,12 @@ const CurrentWeather: FC = () => {
 
     fetchWeatherForecast({ cityName: name, days: 1 }).then((data) => {
       setWeather(data);
-      setSelectedWeather("Today");
       setCurrentSearchLocation(name);
+      setSelectedWeather("Today");
+      setTomorrowWeather(null);
+      setTenDays(null);
       handleToggleSearch();
+      scrollToTop();
     });
   };
 
@@ -266,66 +316,115 @@ const CurrentWeather: FC = () => {
     setSelectedWeather(selectedWeather);
   };
 
+  const scrollToTop = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    setIsScrolling(offsetY > 0);
+  };
+
   return (
-    <SafeAreaView className="pt-[7%] bg-ligth">
+    <SafeAreaView className="relative h-screen bg-green-100">
+        <CityInput
+          showSearch={showSearch}
+          handleSearchLocations={handleSearchLocations}
+          handleToggleSearch={handleToggleSearch}
+        />
+        {searchLocations && searchLocations.length > 0 && showSearch ? (
+          <CitiesList
+            searchLocations={searchLocations}
+            handleClickLocation={handleClickLocation}
+          />
+        ) : null}
+
       <ScrollView
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
           gap: 16,
         }}
       >
-        <View className="relative h-auto bg-gray-600 rounded-3xl">
-          <CityInput
-            showSearch={showSearch}
-            handleSearchLocations={handleSearchLocations}
-            handleToggleSearch={handleToggleSearch}
-          />
+        <ImageBackground
+          source={require("../../assets/valentin-muller-bWtd1ZyEy6w-unsplash.webp")}
+          resizeMode="cover"
+          style={{
+            paddingTop: "5%",
+            backgroundColor: "gray",
+            width: dimensionsWidth,
+            height: dimensionsHeigth / 2,
+          }}
+        >
+          <View className="relative rounded-3xl">
+            {(selectedWeather === "Today" || selectedWeather === "10 days") && (
+              <CurrentCityWeatherInfo weather={weather} />
+            )}
 
-          {searchLocations && searchLocations.length > 0 && showSearch ? (
-            <CitiesList
-              searchLocations={searchLocations}
-              handleClickLocation={handleClickLocation}
-            />
-          ) : null}
-
-          {weather && selectedWeather === "Today" && (
-            <CurrentCityWeatherInfo weather={weather} />
-          )}
-
-          {tomorrowWeather && selectedWeather === "Tomorrow" && (
-            <TomorrowCityWeather weather={tomorrowWeather} />
-          )}
-
-          {!weather && (
-            <View>
-              <Text className="">Грузиться погода</Text>
-              <ActivityIndicator size="small" color="#00ff00" />
-            </View>
-          )}
-        </View>
+            {selectedWeather === "Tomorrow" && (
+              <TomorrowCityWeather weather={tomorrowWeather} />
+            )}
+          </View>
+        </ImageBackground>
 
         <SelectWeatherButtons
           selectedWeather={selectedWeather}
           handleSelectWeather={handleSelectWeather}
         />
 
-        {weather && <AdditionalInfo weather={weather} />}
+        {selectedWeather === "Today" && (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            <AdditionalInfo weather={weather} />
+            <HourlyForecast
+              weather={weather}
+              selectedWeather={selectedWeather}
+            />
+          </View>
+        )}
 
-        {weather && <HourlyForecast weather={weather} />}
+        {selectedWeather === "Tomorrow" && (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            <AdditionalInfo weather={tomorrowWeather} />
+            <HourlyForecast
+              weather={tomorrowWeather}
+              selectedWeather={selectedWeather}
+            />
+          </View>
+        )}
 
-        {/* 7 days  */}
-        {/* {weather?.forecast && <ForecastDays forecast={weather?.forecast} />} */}
+        {/* 10 days  */}
+        {selectedWeather === "10 days" && <ForecastDays weather={tenDays} />}
 
-        {/* forecast for next days */}
-        {/* {weather && isForecastWeatherData(weather) && weather.forecast && (
-        <ForecastDays forecast={weather.forecast} />
-      )} */}
+        {weather && <AirQuality airQuality={weather.current.air_quality} />}
 
-        {/* {weather && <AirQuality airQuality={weather.current.air_quality} />} */}
-
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </ScrollView>
+
+      {isScrolling && (
+        <TouchableOpacity
+          className="absolute bottom-0 right-0 p-4"
+          onPress={scrollToTop}
+        >
+          <Feather name="arrow-up-circle" size={48} color="#858b8692" />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };

@@ -1,61 +1,93 @@
 import { Fontisto } from "@expo/vector-icons";
 import React, { FC } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { getFormattedDayName } from "../../../utils/getFormattedDayName";
-import { IForecastData, IForecastDay } from "../CurrentWeather";
+import { IForecastData, IForecastDay, IForecastWeather } from "../CurrentWeather";
 
 interface IForecastDaysProps {
-  forecast: IForecastData;
+  weather: IForecastWeather | null;
 }
 
-const ForecastDays: FC<IForecastDaysProps> = ({ forecast }) => {
+const ForecastDays: FC<IForecastDaysProps> = ({ weather }) => {
   return (
-    <View className="h-1/2 mb-2 space-y-3 z-30 bg-zinc-600">
-      <View className="flex-row justify-center items-center mx-5 space-x-2">
-        <Fontisto name="calendar" size={16} color="white" />
-        <Text className="text-light text-base">Daily forecast</Text>
-      </View>
+    <>
+      {weather ? (
+        <View className="mb-2 space-y-3 z-30">
+          <View className="flex-row items-center px-[16px]">
+            <View className="p-1 bg-white rounded-full">
+              <Fontisto name="calendar" size={16} color="black" />
+            </View>
+            <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
+              Daily forecast
+            </Text>
+          </View>
 
-      <View className="w-full mb-16">
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
-          {forecast.forecastday?.map((item: IForecastDay, index: number) => {
-            return (
-              <View
-                key={index}
-                className="flex flex-row justify-between items-center rounded-3xl p-1"
-              >
-                <View className="flex flex-row items-center gap-[8px]">
-                  <Image
-                    source={{
-                      uri: `https:${item?.day?.condition?.icon}`,
-                    }}
-                    className="w-11 h-11"
-                  />
-                  <Text className="font-[SoraMedium] text-light">
-                    {getFormattedDayName(item.date)}
-                  </Text>
-                  <Text className="font-[SoraMedium] text-light">
-                    Rain: {item?.day?.daily_chance_of_rain}%
-                  </Text>
-                  <Text className="font-[SoraMedium] text-light">
-                    Snow: {item?.day?.daily_chance_of_snow}%
-                  </Text>
-                </View>
-                <View className="flex flex-row">
-                  <Text className="font-[SoraBold] text-light text-xl">
-                    {item?.day?.maxtemp_c}&#176;
-                  </Text>
-                  <Text className="font-[SoraBold] text-light text-xl">/</Text>
-                  <Text className="font-[SoraBold] text-light text-xl">
-                    {item?.day?.mintemp_c}&#176;
-                  </Text>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-    </View>
+          <View className="">
+            <ScrollView
+              contentContainerStyle={{
+                display: "flex",
+                gap: 8,
+                paddingHorizontal: 16,
+              }}
+            >
+              {weather.forecast.forecastday?.map(
+                (item: IForecastDay, index: number) => {
+                  return (
+                    <View
+                      key={index}
+                      className="flex-row justify-between items-center rounded-3xl p-[16px] bg-green-200"
+                    >
+                      <View className="flex-1 flex-row justify-between items-center">
+                        <View>
+                          <Text className="font-[SoraMedium] text-black text-base">
+                            {getFormattedDayName(item.date)}
+                          </Text>
+                          <Text className="font-[SoraMedium] max-w-[20vh] text-zinc-500">
+                            {item.day.condition.text}
+                          </Text>
+                        </View>
+
+                        <View className="flex-row">
+                          <View className="flex flex-col items-center pr-1 border-r">
+                            <Text className="font-[SoraBold] text-black text-xl">
+                              {item?.day?.maxtemp_c}&#176;
+                            </Text>
+
+                            <Text className="font-[SoraBold] text-black text-xl">
+                              {item?.day?.mintemp_c}&#176;
+                            </Text>
+                          </View>
+
+                          <Image
+                            source={{
+                              uri: `https:${item?.day?.condition?.icon}`,
+                            }}
+                            className="w-11 h-11"
+                          />
+
+                          <View>
+                            <Text className="font-[SoraMedium] text-black">
+                              Rain: {item?.day?.daily_chance_of_rain}%
+                            </Text>
+                            <Text className="font-[SoraMedium] text-black">
+                              Snow: {item?.day?.daily_chance_of_snow}%
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      ) : (
+        <View className="h-[200px] flex justify-center items-center">
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+      )}
+    </>
   );
 };
 

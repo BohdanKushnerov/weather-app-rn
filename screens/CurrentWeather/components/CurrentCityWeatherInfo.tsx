@@ -1,66 +1,74 @@
 import React, { FC } from "react";
-import { Image, Text, View } from "react-native";
+import { ActivityIndicator, Image, Text, View } from "react-native";
 
 import { IForecastWeather } from "../CurrentWeather";
 import { formatDate } from "../../../utils/formatDate";
 import { getTime } from "../../../utils/getTime";
 
 interface ICurrentCityWeatherInfo {
-  weather: IForecastWeather;
+  weather: IForecastWeather | null;
 }
 
 const CurrentCityWeatherInfo: FC<ICurrentCityWeatherInfo> = ({ weather }) => {
   return (
-    <View className="p-[16px] flex-col gap-y-10">
-      <View>
-        <Text className="font-[SoraBold] text-light text-3xl">
-          {`${weather.location.name}, ${weather.location.country}`}
-        </Text>
-
-        <Text className="text-light text-base font-medium">
-          Last update weather: {getTime(weather.current.last_updated)}
-        </Text>
-      </View>
-
-      <View className="flex-row justify-between items-baseline">
-        <View className="flex-col">
-          <View className="flex-row">
-            <Text className="pt-[12px] font-[SoraBold] text-light text-8xl">
-              {weather.current.temp_c}
+    <>
+      {weather ? (
+        <View className="flex flex-col justify-between h-full p-[16px]">
+          <View>
+            <Text className="font-[SoraBold] text-white text-3xl">
+              {`${weather.location.name}, ${weather.location.country}`}
             </Text>
-            <Text className="text-light text-7xl">&#176;</Text>
+
+            <Text className="text-white text-base font-medium">
+              Last update weather: {getTime(weather.current.last_updated)}
+            </Text>
           </View>
 
-          <Text className="font-[SoraSemiBold] text-2xl text-light">
-            Feels like: {weather.current.feelslike_c}&#176;
-          </Text>
-        </View>
+          <View className="flex-row justify-between items-end">
+            <View className="flex-col">
+              <View className="flex-row">
+                <Text className="pt-[12px] font-[SoraBold] text-white text-8xl">
+                  {weather.current.temp_c}
+                </Text>
+                <Text className="text-white text-7xl">&#176;</Text>
+              </View>
 
-        <View className="max-w-[150px] flex-col items-center">
-          <Image
-            className="w-[128px] h-[128px]"
-            source={{ uri: `https:${weather.current.condition.icon}` }}
-          />
-          <Text className="font-[SoraSemiBold] text-light text-2xl">
-            {weather.current.condition.text}
-          </Text>
-        </View>
-      </View>
+              <Text className="font-[SoraSemiBold] text-2xl text-white">
+                Feels like: {weather.current.feelslike_c}&#176;
+              </Text>
+            </View>
 
-      <View className="flex-row justify-between items-end">
-        <Text className="font-[SoraMedium] text-light text-xl">
-          {formatDate(weather.location.localtime)}
-        </Text>
-        <View>
-          <Text className="font-[SoraSemiBold] text-light text-2xl">
-            Day: {weather.forecast.forecastday[0].day.maxtemp_c}&#176;
-          </Text>
-          <Text className="font-[SoraSemiBold] text-light text-2xl">
-            Nigth: {weather.forecast.forecastday[0].day.mintemp_c}&#176;
-          </Text>
+            <View className="max-w-[150px] flex-col items-center">
+              <Image
+                className="w-[128px] h-[128px]"
+                source={{ uri: `https:${weather.current.condition.icon}` }}
+              />
+              <Text className="font-[SoraSemiBold] text-white text-2xl">
+                {weather.current.condition.text}
+              </Text>
+            </View>
+          </View>
+
+          <View className="flex-row justify-between items-end">
+            <Text className="font-[SoraMedium] text-white text-xl">
+              {formatDate(weather.location.localtime)}
+            </Text>
+            <View>
+              <Text className="font-[SoraSemiBold] text-white text-2xl">
+                Day: {weather.forecast.forecastday[0].day.maxtemp_c}&#176;
+              </Text>
+              <Text className="font-[SoraSemiBold] text-white text-2xl">
+                Nigth: {weather.forecast.forecastday[0].day.mintemp_c}&#176;
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      ) : (
+        <View className="h-full flex justify-center items-center">
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+      )}
+    </>
   );
 };
 
