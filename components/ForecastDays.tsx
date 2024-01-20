@@ -1,8 +1,10 @@
-import { Fontisto } from "@expo/vector-icons";
-import React, { FC } from "react";
+import { FC } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
-import { getFormattedDayName } from "../../../utils/getFormattedDayName";
-import { IForecastData, IForecastDay, IForecastWeather } from "../CurrentWeather";
+import { Fontisto } from "@expo/vector-icons";
+
+import { getFormattedDayName } from "@utils/getFormattedDayName";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { IForecastDay } from "@interfaces/IForecastDay";
 
 interface IForecastDaysProps {
   weather: IForecastWeather | null;

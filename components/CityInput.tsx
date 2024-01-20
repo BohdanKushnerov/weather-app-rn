@@ -1,6 +1,11 @@
+import { FC } from "react";
+import {
+  ActivityIndicator,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Fontisto } from "@expo/vector-icons";
-import React, { FC } from "react";
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface ICityInput {
   isLoading: boolean;

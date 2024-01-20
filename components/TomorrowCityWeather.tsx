@@ -1,15 +1,15 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
-import { IForecastWeather } from "../CurrentWeather";
-import { formatDate } from "../../../utils/formatDate";
-import { getTime } from "../../../utils/getTime";
+import { getTime } from "@utils/getTime";
+import { formatDate } from "@utils/formatDate";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 
-interface ILocationCityWeatherInfo {
+interface ITomorrowCityWeather {
   weather: IForecastWeather | null;
 }
 
-const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
+const TomorrowCityWeather: FC<ITomorrowCityWeather> = ({ weather }) => {
   return (
     <>
       {weather ? (
@@ -26,32 +26,34 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
 
           <View className="flex-row justify-between items-end">
             <View className="flex-col">
+              <Text className="max-w-[150px] font-[SoraSemiBold] text-center text-white text-2xl">
+                Average temperature:
+              </Text>
+
               <View className="flex-row">
                 <Text className="pt-[12px] font-[SoraBold] text-white text-8xl">
-                  {weather.current.temp_c}
+                  {weather.forecast.forecastday[0].day.avgtemp_c}
                 </Text>
                 <Text className="text-white text-7xl">&#176;</Text>
               </View>
-
-              <Text className="font-[SoraSemiBold] text-2xl text-white">
-                Feels like: {weather.current.feelslike_c}&#176;
-              </Text>
             </View>
 
             <View className="max-w-[150px] flex-col items-center">
               <Image
                 className="w-[128px] h-[128px]"
-                source={{ uri: `https:${weather.current.condition.icon}` }}
+                source={{
+                  uri: `https:${weather.forecast.forecastday[0].day.condition.icon}`,
+                }}
               />
-              <Text className="font-[SoraSemiBold] text-white text-2xl">
-                {weather.current.condition.text}
+              <Text className="font-[SoraSemiBold] text-center text-white text-2xl">
+                {weather.forecast.forecastday[0].day.condition.text}
               </Text>
             </View>
           </View>
 
           <View className="flex-row justify-between items-end">
             <Text className="font-[SoraMedium] text-white text-xl">
-              {formatDate(weather.location.localtime)}
+              {formatDate(weather.forecast.forecastday[0].date)}
             </Text>
             <View>
               <Text className="font-[SoraSemiBold] text-white text-2xl">
@@ -72,4 +74,4 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
   );
 };
 
-export default LocationCityWeatherInfo;
+export default TomorrowCityWeather;

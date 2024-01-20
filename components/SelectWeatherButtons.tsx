@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { WeatherType } from "../CurrentWeather";
+
+import { WeatherType } from "@customTypes/WeatherType";
 
 interface ISelectWeatherButtons {
   selectedWeather: WeatherType;

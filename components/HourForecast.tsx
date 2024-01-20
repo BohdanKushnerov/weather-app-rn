@@ -1,8 +1,11 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { IForecastWeather, IWeatherHour, WeatherType } from "../CurrentWeather";
-import { getTime } from "../../../utils/getTime";
+
+import { getTime } from "@utils/getTime";
+import { IWeatherHour } from "@interfaces/IWeatherHour";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { WeatherType } from "@customTypes/WeatherType";
 
 interface IHourlyForecast {
   weather: IForecastWeather | null;

@@ -1,11 +1,12 @@
 import { FC } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import { IForecastWeather } from "../CurrentWeather";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 
 interface IAdditionalInfo {
   weather: IForecastWeather | null;
@@ -122,10 +123,7 @@ const AdditionalInfo: FC<IAdditionalInfo> = ({ weather }) => {
         </View>
       ) : (
         <View className="h-[200px] flex justify-center items-center">
-          <ActivityIndicator
-            size="large"
-            color="#00ff00"
-          />
+          <ActivityIndicator size="large" color="#00ff00" />
         </View>
       )}
     </>
