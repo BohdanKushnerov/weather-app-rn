@@ -1,3 +1,4 @@
+import { IAirQuality } from "./IAirQuality";
 import { IConditionWeather } from "./IConditionWeather";
 import { IWeatherHour } from "./IWeatherHour";
 
@@ -10,6 +11,7 @@ export interface IForecastDay {
     condition: IConditionWeather;
     daily_chance_of_rain: number;
     daily_chance_of_snow: number;
+    air_quality: IAirQuality;
   };
   hour: IWeatherHour[];
 }

@@ -6,6 +6,7 @@ import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
+  Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -24,11 +25,13 @@ import AirQuality from "@components/AirQuality";
 import HourlyForecast from "@components/HourForecast";
 import SelectWeatherButtons from "@components/SelectWeatherButtons";
 import TomorrowCityWeather from "@components/TomorrowCityWeather";
+import LoaderComponent from "@components/LoaderComponent";
 import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
+import { getTime } from "@utils/getTime";
 import { IForecastDay } from "@interfaces/IForecastDay";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
-import { WeatherType } from "@customTypes/WeatherType";
+import { Weather } from "@customEnums/Weather";
 
 type CurrentWeatherRouteProp = RouteProp<RootStackParamList, "CurrentWeather">;
 
@@ -42,14 +45,13 @@ interface ICurrentWeatherProps {
   navigation: CurrentWeatherNavigationProp;
 }
 
-const CurrentWeather: FC<ICurrentWeatherProps> = ({
-  route: { params },
-  navigation,
-}) => {
+const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
-  const [selectedWeather, setSelectedWeather] = useState<WeatherType>("Today");
+  const [selectedWeather, setSelectedWeather] = useState<Weather>(
+    Weather.Today
+  );
 
   const [weather, setWeather] = useState<IForecastWeather | null>(null);
   const [tomorrowWeather, setTomorrowWeather] =
@@ -57,18 +59,15 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   const [tenDaysWeather, setTenDaysWeather] = useState<IForecastWeather | null>(
     null
   );
-
-  // const [currentSearchLocation, setCurrentSearchLocation] = useState<
-  //   string | null
-  // >(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const windowDimensions = useWindowDimensions();
+  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
-  const resetWeather = () => {
-    setWeather(null);
-    setTomorrowWeather(null);
-    setTenDaysWeather(null);
-  };
+  const params = route?.params;
+
+  console.log("-----location-----", location);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -76,14 +75,6 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
       setRefreshing(false);
     }, 1000);
   }, []);
-
-  // console.log("navigation", navigation);
-  console.log("params", params);
-
-  const scrollViewRef = useRef<ScrollView>(null);
-
-  const windowDimensions = useWindowDimensions();
-  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
@@ -98,18 +89,27 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
   // if (location) current weather in current location
   useEffect(() => {
-    if (location && selectedWeather === "Today") {
+    console.log("in useEffect");
+
+    if (location && selectedWeather === Weather.Today) {
       const { latitude, longitude } = location.coords;
+      console.log("latitude, longitude", latitude, longitude);
+
       fetchWeatherCurrent({ latitude, longitude, days: 1 }).then((data) => {
+        console.log(console.log("data", data));
         setWeather(data);
       });
     }
   }, [location]);
 
-  // currentSearchLocation && "Today"
+  // params.cityName && "Today"
   useEffect(() => {
     if (params === undefined) return;
-    if (params.cityName && selectedWeather === "Today") {
+    resetWeather();
+    console.log("resetWeather");
+    if (params.cityName) {
+      console.log("useEffect params in");
+
       fetchWeatherForecast({ cityName: params.cityName, days: 1 }).then(
         (data) => {
           setWeather(data);
@@ -198,7 +198,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
     }
   }, [selectedWeather, params]);
 
-  const handleSelectWeather = (selectedWeather: WeatherType) => {
+  const handleSelectWeather = (selectedWeather: Weather) => {
     setSelectedWeather(selectedWeather);
   };
 
@@ -213,32 +213,53 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
     setIsScrolling(offsetY > 0);
   };
 
+  const resetWeather = () => {
+    scrollToTop();
+    setSelectedWeather(Weather.Today);
+    setWeather(null);
+    setTomorrowWeather(null);
+    setTenDaysWeather(null);
+  };
+
   return (
     <SafeAreaView className="relative h-screen bg-green-100">
       {/* goSearch + menu */}
-      <View className="absolute top-7 right-0 w-full px-1 z-10 flex flex-row items-center justify-end gap-y-5">
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("SearchWeather", {
-              handleSelectWeather,
-              resetWeather,
-              scrollToTop,
-            })
-          }
-          className="p-2"
-        >
-          <Fontisto name="search" size={24} color="white" />
-        </TouchableOpacity>
+      <View className="absolute top-7 right-0 w-full p-2 z-10 flex flex-row items-end justify-between bg-gray-700/50 rounded-3xl">
+        {weather ? (
+          <View>
+            <Text className="font-[SoraBold] text-white text-3xl">
+              {`${weather.location.name}, ${weather.location.country}`}
+            </Text>
 
-        <TouchableOpacity className="p-2" onPress={scrollToTop}>
-          <Entypo name="menu" size={36} color="white" />
-        </TouchableOpacity>
+            <Text className="text-white text-base font-medium">
+              Last update weather: {getTime(weather.current.last_updated)}
+            </Text>
+          </View>
+        ) : (
+          <LoaderComponent />
+        )}
+
+        <View className="flex-row gap-x-2 items-center">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SearchWeather", {})}
+            className="p-2"
+          >
+            <Fontisto name="search" size={24} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SettingsWeather", {})}
+            className="p-2"
+          >
+            <Entypo name="menu" size={36} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
         ref={scrollViewRef}
         onScroll={handleScroll}
-        scrollEventThrottle={16}
+        scrollEventThrottle={1000}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -259,7 +280,8 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
           }}
         >
           <View className="relative rounded-3xl">
-            {(selectedWeather === "Today" || selectedWeather === "10 days") && (
+            {(selectedWeather === Weather.Today ||
+              selectedWeather === Weather.TenDays) && (
               <LocationCityWeatherInfo weather={weather} />
             )}
 
@@ -275,7 +297,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
         />
 
         {/* Today */}
-        {selectedWeather === "Today" && (
+        {selectedWeather === Weather.Today && (
           <View
             style={{
               display: "flex",
@@ -288,7 +310,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
               weather={weather}
               selectedWeather={selectedWeather}
             />
-            {weather && <AirQuality airQuality={weather.current.air_quality} />}
+            {weather ? (
+              <AirQuality airQuality={weather.current.air_quality} />
+            ) : (
+              <LoaderComponent />
+            )}
           </View>
         )}
 
@@ -306,13 +332,16 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
               weather={tomorrowWeather}
               selectedWeather={selectedWeather}
             />
-            {
+
+            {tomorrowWeather ? (
               <AirQuality
                 airQuality={
                   tomorrowWeather?.forecast.forecastday[0].day.air_quality
                 }
               />
-            }
+            ) : (
+              <LoaderComponent />
+            )}
           </View>
         )}
 

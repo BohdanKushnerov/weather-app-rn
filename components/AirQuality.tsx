@@ -158,6 +158,8 @@ const AirQuality: FC<IAirQualityProps> = ({ airQuality }) => {
         {/* <AirQualityTable /> */}
       </View>
     </View>
+
+    
   );
 };
 

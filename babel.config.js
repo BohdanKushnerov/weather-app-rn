@@ -15,6 +15,7 @@ module.exports = function (api) {
             "@components": "./components",
             "@utils": "./utils",
             "@interfaces": "./interfaces",
+            "@customEnums": "./customEnums",
             "@customTypes": "./customTypes",
           },
         },
