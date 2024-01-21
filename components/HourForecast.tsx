@@ -43,8 +43,8 @@ const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
   return (
     <>
       {weather ? (
-        <View className="mx-[16px] px-[16px] py-[8px] mb-[16px] bg-green-200 rounded-3xl">
-          <View className="flex-row items-center ">
+        <View className="mx-[16px] px-[16px] py-[8px] bg-green-200 rounded-3xl">
+          <View className="flex-row items-center gap-2">
             <View className="p-1 bg-white rounded-full">
               <MaterialCommunityIcons name="hours-24" size={24} color="black" />
             </View>
@@ -55,7 +55,6 @@ const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
 
           <ScrollView horizontal>
             {filteredHours.map((item, index) => {
-              // console.log("item ==========================", item)
               return (
                 <View
                   key={index}

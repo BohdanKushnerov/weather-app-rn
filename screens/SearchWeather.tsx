@@ -32,7 +32,11 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
   const [showSearch, setShowSearch] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("SearchWeather params", params);
+  const { handleSelectWeather, resetWeather, scrollToTop } = params;
+
+  console.log("==========", handleSelectWeather, resetWeather, scrollToTop);
+
+  // console.log("SearchWeather params", params);
 
   const handleToggleSearch = () => {
     setShowSearch(!showSearch);

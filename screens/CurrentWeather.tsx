@@ -288,6 +288,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
               weather={weather}
               selectedWeather={selectedWeather}
             />
+            {weather && <AirQuality airQuality={weather.current.air_quality} />}
           </View>
         )}
 
@@ -305,6 +306,13 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
               weather={tomorrowWeather}
               selectedWeather={selectedWeather}
             />
+            {
+              <AirQuality
+                airQuality={
+                  tomorrowWeather?.forecast.forecastday[0].day.air_quality
+                }
+              />
+            }
           </View>
         )}
 
@@ -312,8 +320,6 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
         {selectedWeather === "10 days" && (
           <ForecastDays weather={tenDaysWeather} />
         )}
-
-        {weather && <AirQuality airQuality={weather.current.air_quality} />}
 
         <StatusBar style="light" />
       </ScrollView>
