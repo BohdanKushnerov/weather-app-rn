@@ -14,12 +14,12 @@ interface IGoBackBtnProps {
 const GoBackBtn: FC<IGoBackBtnProps> = ({ navigation }) => {
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={0.5}
       onPress={() => {
         navigation.goBack();
       }}
     >
-      <AntDesign name="arrowleft" size={24} color="#212121cc" />
+      <AntDesign name="arrowleft" size={36} color="black" />
     </TouchableOpacity>
   );
 };

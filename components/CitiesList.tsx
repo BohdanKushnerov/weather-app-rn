@@ -22,9 +22,6 @@ const CitiesList: FC<ICitiesList> = ({
           <TouchableOpacity
             key={index}
             onPress={() => handleClickLocation(loc)}
-            // className={
-            //   "flex-row items-center border-0 p-3 px-4 mb-1 " + borderClass
-            // }
           >
             <View
               className={
@@ -36,7 +33,7 @@ const CitiesList: FC<ICitiesList> = ({
                 size={24}
                 color="gray"
               />
-              <Text className="text-black text-lg ml-2">
+              <Text className=" ml-2 font-[SoraSemiBold] text-black text-lg">
                 {loc?.name}, {loc?.country}
               </Text>
             </View>

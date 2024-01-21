@@ -15,6 +15,7 @@ import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, Fontisto } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
@@ -65,9 +66,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   const windowDimensions = useWindowDimensions();
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
+  const insets = useSafeAreaInsets();
+
   const params = route?.params;
 
-  console.log("-----location-----", location);
+  // console.log("-----location-----", location);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -80,23 +83,51 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+      console.log("status", status);
       if (status === "granted") {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+        try {
+          // Location.getCurrentPositionAsync({
+          //   accuracy: Location.Accuracy.Balanced,
+          // })
+          //   .then((location) => {
+          //     console.log("location", location);
+          //     setLocation(location);
+          //   })
+          //   .catch((err) => console.log("====err then", err))
+          //   .finally(() => console.log("finally"));
+          function getCurrentLocation() {
+            const timeout = 5000;
+            return new Promise(async (resolve, reject) => {
+              setTimeout(() => {
+                reject(
+                  new Error(
+                    `Error getting gps location after ${(timeout * 2) / 1000} s`
+                  )
+                );
+              }, timeout * 2);
+              setTimeout(async () => {
+                resolve(await Location.getLastKnownPositionAsync());
+                console.log(1);
+              }, timeout);
+              resolve(await Location.getCurrentPositionAsync());
+              console.log(2);
+            });
+          }
+          const location = await getCurrentLocation();
+          location && setLocation(location);
+        } catch (error) {
+          console.log("=====error try", error);
+        }
       }
     })();
   }, []);
 
   // if (location) current weather in current location
   useEffect(() => {
-    console.log("in useEffect");
-
     if (location && selectedWeather === Weather.Today) {
       const { latitude, longitude } = location.coords;
-      console.log("latitude, longitude", latitude, longitude);
 
       fetchWeatherCurrent({ latitude, longitude, days: 1 }).then((data) => {
-        console.log(console.log("data", data));
         setWeather(data);
       });
     }
@@ -106,10 +137,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   useEffect(() => {
     if (params === undefined) return;
     resetWeather();
-    console.log("resetWeather");
     if (params.cityName) {
-      console.log("useEffect params in");
-
       fetchWeatherForecast({ cityName: params.cityName, days: 1 }).then(
         (data) => {
           setWeather(data);
@@ -222,9 +250,16 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView className="relative h-screen bg-green-100">
+    <View className="relative h-screen bg-green-100">
       {/* goSearch + menu */}
-      <View className="absolute top-7 right-0 w-full p-2 z-10 flex flex-row items-end justify-between bg-gray-700/50 rounded-3xl">
+      <View
+        className={`w-full p-2 z-10 flex flex-row items-end justify-between bg-gray-700/50 rounded-3xl`}
+        style={{
+          position: "absolute",
+          top: insets.top,
+          right: 0,
+        }}
+      >
         {weather ? (
           <View>
             <Text className="font-[SoraBold] text-white text-3xl">
@@ -362,7 +397,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
           <Feather name="arrow-up-circle" size={48} color="#858b8692" />
         </TouchableOpacity>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

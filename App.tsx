@@ -1,7 +1,14 @@
 import { FC } from "react";
-import { ActivityIndicator, SafeAreaView, Settings, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  Settings,
+  Text,
+  View,
+} from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import BackBtn from "./components/BackBtn";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,6 +16,7 @@ import { RootStackParamList } from "./customTypes/RootStackParamList";
 import CurrentWeather from "@screens/CurrentWeather";
 import SearchWeather from "@screens/SearchWeather";
 import SettingsWeather from "@screens/SettingsWeather";
+import HeaderNastedScreens from "@components/HeaderNastedScreens";
 // import qweq from "@screen/";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -37,7 +45,7 @@ const App: FC = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="CurrentWeather">
           <Stack.Screen
@@ -49,11 +57,12 @@ const App: FC = () => {
             name="SearchWeather"
             component={SearchWeather}
             options={({ navigation }) => ({
-              tabBarStyle: { display: "none" },
-              headerLeft: () => <BackBtn navigation={navigation} />,
-              headerLeftContainerStyle: { marginLeft: 20 },
-              headerRightContainerStyle: { marginRight: 20 },
-              // headerShown: false, // Move headerShown into the options object
+              header: () => (
+                <HeaderNastedScreens
+                  navigation={navigation}
+                  title="SearchWeather"
+                />
+              ),
             })}
           />
 
@@ -62,16 +71,17 @@ const App: FC = () => {
             name="SettingsWeather"
             component={SettingsWeather}
             options={({ navigation }) => ({
-              tabBarStyle: { display: "none" },
-              headerLeft: () => <BackBtn navigation={navigation} />,
-              headerLeftContainerStyle: { marginLeft: 20 },
-              headerRightContainerStyle: { marginRight: 20 },
-              // headerShown: false, // Move headerShown into the options object
+              header: () => (
+                <HeaderNastedScreens
+                  navigation={navigation}
+                  title="SettingsWeather"
+                />
+              ),
             })}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
