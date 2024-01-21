@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { WeatherType } from "../CurrentWeather";
+
+import { Weather } from "@customEnums/Weather";
 
 interface ISelectWeatherButtons {
-  selectedWeather: WeatherType;
-  handleSelectWeather: (selectedWeather: WeatherType) => void;
+  selectedWeather: Weather;
+  handleSelectWeather: (selectedWeather: Weather) => void;
 }
 
 const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
@@ -15,9 +16,9 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
     <View className="flex-row justify-between px-[16px]">
       <TouchableOpacity
         className={`px-[35px] py-[9px] rounded-xl ${
-          selectedWeather === "Today" ? "bg-green-400" : "bg-white"
+          selectedWeather === Weather.Today ? "bg-green-400" : "bg-white"
         } `}
-        onPress={() => handleSelectWeather("Today")}
+        onPress={() => handleSelectWeather(Weather.Today)}
       >
         <Text>Today</Text>
       </TouchableOpacity>
@@ -25,7 +26,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
         className={`px-[35px] py-[9px] rounded-xl ${
           selectedWeather === "Tomorrow" ? "bg-green-400" : "bg-white"
         } `}
-        onPress={() => handleSelectWeather("Tomorrow")}
+        onPress={() => handleSelectWeather(Weather.Tomorrow)}
       >
         <Text>Tomorrow</Text>
       </TouchableOpacity>
@@ -33,7 +34,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtons> = ({
         className={`px-[35px] py-[9px] rounded-xl ${
           selectedWeather === "10 days" ? "bg-green-400" : "bg-white"
         } `}
-        onPress={() => handleSelectWeather("10 days")}
+        onPress={() => handleSelectWeather(Weather.TenDays)}
       >
         <Text>10 days</Text>
       </TouchableOpacity>

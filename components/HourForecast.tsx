@@ -1,18 +1,22 @@
-import React, { FC } from "react";
-import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
+import { FC } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { IForecastWeather, IWeatherHour, WeatherType } from "../CurrentWeather";
-import { getTime } from "../../../utils/getTime";
+
+import LoaderComponent from "./LoaderComponent";
+import { getTime } from "@utils/getTime";
+import { IWeatherHour } from "@interfaces/IWeatherHour";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { Weather } from "@customEnums/Weather";
 
 interface IHourlyForecast {
   weather: IForecastWeather | null;
-  selectedWeather: WeatherType;
+  selectedWeather: Weather;
 }
 
 const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
   let filteredHours: IWeatherHour[] = [];
 
-  if (selectedWeather === "Today") {
+  if (selectedWeather === Weather.Today) {
     const currentDateTime = new Date();
 
     filteredHours = (weather?.forecast?.forecastday[0].hour || []).filter(
@@ -40,8 +44,8 @@ const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
   return (
     <>
       {weather ? (
-        <View className="mx-[16px] px-[16px] py-[8px] mb-[16px] bg-green-200 rounded-3xl">
-          <View className="flex-row items-center ">
+        <View className="mx-[16px] px-[16px] py-[8px] bg-green-200 rounded-3xl">
+          <View className="flex-row items-center gap-2">
             <View className="p-1 bg-white rounded-full">
               <MaterialCommunityIcons name="hours-24" size={24} color="black" />
             </View>
@@ -52,7 +56,6 @@ const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
 
           <ScrollView horizontal>
             {filteredHours.map((item, index) => {
-              // console.log("item ==========================", item)
               return (
                 <View
                   key={index}
@@ -76,9 +79,7 @@ const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
           </ScrollView>
         </View>
       ) : (
-        <View className="h-[100px] flex justify-center items-center">
-          <ActivityIndicator size="large" color="#00ff00" />
-        </View>
+        <LoaderComponent />
       )}
     </>
   );

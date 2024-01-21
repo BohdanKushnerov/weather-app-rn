@@ -1,11 +1,8 @@
+import { FC } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { FC } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { ISearchLocation } from "../CurrentWeather";
+
+import { ISearchLocation } from "@interfaces/ISearchLocation";
 
 interface ICitiesList {
   searchLocations: ISearchLocation[];

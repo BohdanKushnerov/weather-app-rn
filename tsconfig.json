@@ -3,14 +3,25 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@screens/*": ["./screens/*"]
+      "@api/*": ["./api/*"],
+      "@assets/*": ["./assets/*"],
+      "@screens/*": ["./screens/*"],
+      "@components/*": ["./components/*"],
+      "@utils/*": ["./utils/*"],
+      "@interfaces/*": ["./interfaces/*"],
+      "@customEnums/*": ["customEnums/*"],
+      "@customTypes/*": ["./customTypes/*"]
     }
+    // "paths": {
+    //   "@/*": ["*"]
+    // }
   },
   "include": [
-    "app.d.ts",
+    "my-app.d.ts",
+    "App.tsx",
     "screens/**/*.ts",
     "screens/**/*.tsx",
-    "screens/CurrentWeather/components/**/*.ts",
-    "screens/CurrentWeather/components/**/*.tsx"
+    "components/**/*.ts",
+    "components/**/*.tsx"
   ]
 }

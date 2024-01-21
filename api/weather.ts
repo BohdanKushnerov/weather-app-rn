@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiKey, baseUrl, endpoints } from "../constants/constants";
+import { apiKey, baseUrl, endpoints } from "../constants";
 
 const currentEndpoint = (params: {
   latitude: number;
