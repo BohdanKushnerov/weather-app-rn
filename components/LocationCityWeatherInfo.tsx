@@ -2,14 +2,16 @@ import { FC } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
 import { formatDate } from "../utils/formatDate";
-import { getTime } from "../utils/getTime";
+// import { getTime } from "../utils/getTime";
 import { IForecastWeather } from "../interfaces/IForecastWeather";
 
-interface ILocationCityWeatherInfo {
+interface ILocationCityWeatherInfoProps {
   weather: IForecastWeather | null;
 }
 
-const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
+const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
+  weather,
+}) => {
   return (
     <>
       {weather ? (
@@ -24,7 +26,7 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfo> = ({ weather }) => {
             </Text>
           </View> */}
 
-          <View className="flex-col gap-y-[15%]">
+          <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
                 <View className="flex-row">

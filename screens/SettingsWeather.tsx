@@ -1,8 +1,14 @@
-import React, { FC } from "react";
-import { Text } from "react-native";
+import { FC } from "react";
+import { StatusBar } from "expo-status-bar";
+import { Text, View } from "react-native";
 
 const SettingsWeather: FC = () => {
-  return <Text>SettingsWeather</Text>;
+  return (
+    <View>
+      <Text>SettingsWeather</Text>
+      <StatusBar style="dark" />
+    </View>
+  );
 };
 
 export default SettingsWeather;

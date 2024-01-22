@@ -8,12 +8,15 @@ import { IWeatherHour } from "@interfaces/IWeatherHour";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
 
-interface IHourlyForecast {
+interface IHourlyForecastProps {
   weather: IForecastWeather | null;
   selectedWeather: Weather;
 }
 
-const HourlyForecast: FC<IHourlyForecast> = ({ weather, selectedWeather }) => {
+const HourlyForecast: FC<IHourlyForecastProps> = ({
+  weather,
+  selectedWeather,
+}) => {
   let filteredHours: IWeatherHour[] = [];
 
   if (selectedWeather === Weather.Today) {

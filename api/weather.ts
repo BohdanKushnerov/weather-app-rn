@@ -1,7 +1,16 @@
 import axios from "axios";
 import { apiKey, baseUrl, endpoints } from "../constants";
 
-const currentEndpoint = (params: {
+const currentEndpoint = (cityName: string) =>
+  `${baseUrl}/${endpoints.current}?key=${apiKey}&q=${cityName}&aqi=no`;
+
+const currentEndpointLocation = (params: {
+  latitude: number;
+  longitude: number;
+}) =>
+  `${baseUrl}/${endpoints.current}?key=${apiKey}&q=${params.latitude},${params.longitude}&aqi=yes`;
+
+const todayForecastEndpoint = (params: {
   latitude: number;
   longitude: number;
   days: number;
@@ -30,12 +39,25 @@ const apiCall = async (endpoint: string) => {
   }
 };
 
+export const fetchCurrentForecast = (cityName: string) => {
+  let forecastUrl = currentEndpoint(cityName);
+  return apiCall(forecastUrl);
+};
+
+export const fetchCurrentForecastLocation = (params: {
+  latitude: number;
+  longitude: number;
+}) => {
+  let forecastUrl = currentEndpointLocation(params);
+  return apiCall(forecastUrl);
+};
+
 export const fetchWeatherCurrent = (params: {
   latitude: number;
   longitude: number;
   days: number;
 }) => {
-  let forecastUrl = currentEndpoint(params);
+  let forecastUrl = todayForecastEndpoint(params);
   return apiCall(forecastUrl);
 };
 

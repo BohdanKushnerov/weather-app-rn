@@ -8,13 +8,21 @@ import {
 import { Fontisto } from "@expo/vector-icons";
 import { debounce } from "lodash";
 
-interface ICityInput {
+interface ICityInputProps {
   isLoading: boolean;
   city: string;
-  handleChangeCity: (search: string) => void;
+  handleChangeCity: (search: string, resetLocations?: boolean) => void;
 }
 
-const CityInput: FC<ICityInput> = ({ isLoading, city, handleChangeCity }) => {
+const CityInput: FC<ICityInputProps> = ({
+  isLoading,
+  city,
+  handleChangeCity,
+}) => {
+  const resetSearch = () => {
+    handleChangeCity("", true);
+  };
+
   return (
     <View className="h-10 flex-row justify-end items-center rounded-full">
       <TextInput
@@ -34,10 +42,14 @@ const CityInput: FC<ICityInput> = ({ isLoading, city, handleChangeCity }) => {
         />
       )}
 
-      <TouchableOpacity className="absolute rounded-full p-3 m-1">
-        <Fontisto name="close" size={24} color="white" />
-        {/* <Fontisto name="search" size={24} color="white" /> */}
-      </TouchableOpacity>
+      {city && (
+        <TouchableOpacity
+          className="absolute rounded-full p-3 m-1"
+          onPress={resetSearch}
+        >
+          <Fontisto name="close" size={24} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

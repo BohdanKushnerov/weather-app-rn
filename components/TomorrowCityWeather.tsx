@@ -5,11 +5,11 @@ import { getTime } from "@utils/getTime";
 import { formatDate } from "@utils/formatDate";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 
-interface ITomorrowCityWeather {
+interface ITomorrowCityWeatherProps {
   weather: IForecastWeather | null;
 }
 
-const TomorrowCityWeather: FC<ITomorrowCityWeather> = ({ weather }) => {
+const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
   return (
     <>
       {weather ? (
@@ -24,7 +24,7 @@ const TomorrowCityWeather: FC<ITomorrowCityWeather> = ({ weather }) => {
             </Text>
           </View> */}
 
-          <View className="flex-col gap-y-[15%]">
+          <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
                 <Text className="max-w-[150px] font-[SoraSemiBold] text-center text-white text-2xl">

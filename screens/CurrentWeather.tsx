@@ -4,7 +4,6 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -29,6 +28,7 @@ import TomorrowCityWeather from "@components/TomorrowCityWeather";
 import LoaderComponent from "@components/LoaderComponent";
 import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
 import { getTime } from "@utils/getTime";
+import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastDay } from "@interfaces/IForecastDay";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
@@ -46,7 +46,10 @@ interface ICurrentWeatherProps {
   navigation: CurrentWeatherNavigationProp;
 }
 
-const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
+const CurrentWeather: FC<ICurrentWeatherProps> = ({
+  route: { params },
+  navigation,
+}) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -64,26 +67,60 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const windowDimensions = useWindowDimensions();
-  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
-
   const insets = useSafeAreaInsets();
 
-  const params = route?.params;
+  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
-  // console.log("-----location-----", location);
-
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => {
+
+    try {
+      // Reset state to initial values
+      setLocation(null);
+      setSelectedWeather(Weather.Today);
+      setWeather(null);
+      setTomorrowWeather(null);
+      setTenDaysWeather(null);
+
+      // Fetch new data from the server or any other data source
+      // Example: Refetch current weather data based on the user's location
+      const refreshedLocation = await getCurrentLocation();
+      setLocation(refreshedLocation);
+
+      if (refreshedLocation && selectedWeather === Weather.Today) {
+        const { latitude, longitude } = refreshedLocation.coords;
+        const data = await fetchWeatherCurrent({
+          latitude,
+          longitude,
+          days: 1,
+        });
+        setWeather(data);
+      }
+
+      // Additional logic for other weather types (Tomorrow, 10 days) if needed...
+    } catch (error) {
+      console.error("Error while refreshing:", error);
+    } finally {
+      // After refreshing, set refreshing to false
       setRefreshing(false);
-    }, 1000);
-  }, []);
+    }
+  }, [selectedWeather]);
+
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+
+  //   setTimeout(() => {
+  //     setRefreshing(false);
+  //   }, 1000);
+  // }, []);
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
     (async () => {
+      console.log("requestForegroundPermissionsAsync");
+
       let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log("status", status);
+      // console.log("status", status);
       if (status === "granted") {
         try {
           // Location.getCurrentPositionAsync({
@@ -95,25 +132,26 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
           //   })
           //   .catch((err) => console.log("====err then", err))
           //   .finally(() => console.log("finally"));
-          function getCurrentLocation() {
-            const timeout = 5000;
-            return new Promise(async (resolve, reject) => {
-              setTimeout(() => {
-                reject(
-                  new Error(
-                    `Error getting gps location after ${(timeout * 2) / 1000} s`
-                  )
-                );
-              }, timeout * 2);
-              setTimeout(async () => {
-                resolve(await Location.getLastKnownPositionAsync());
-                console.log(1);
-              }, timeout);
-              resolve(await Location.getCurrentPositionAsync());
-              console.log(2);
-            });
-          }
+          // function getCurrentLocation() {
+          //   const timeout = 5000;
+          //   return new Promise(async (resolve, reject) => {
+          //     setTimeout(() => {
+          //       reject(
+          //         new Error(
+          //           `Error getting gps location after ${(timeout * 2) / 1000} s`
+          //         )
+          //       );
+          //     }, timeout * 2);
+          //     setTimeout(async () => {
+          //       resolve(await Location.getLastKnownPositionAsync());
+          //       console.log("getLastKnownPositionAsync", 1);
+          //     }, timeout);
+          //     resolve(await Location.getCurrentPositionAsync());
+          //     console.log("getCurrentPositionAsync", 2);
+          //   });
+          // }
           const location = await getCurrentLocation();
+          console.log("first", location);
           location && setLocation(location);
         } catch (error) {
           console.log("=====error try", error);
@@ -253,7 +291,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
     <View className="relative h-screen bg-green-100">
       {/* goSearch + menu */}
       <View
-        className={`w-full p-2 z-10 flex flex-row items-end justify-between bg-gray-700/50 rounded-3xl`}
+        className={`w-full p-2 z-10 flex flex-row items-center justify-between bg-gray-700/50 rounded-3xl`}
         style={{
           position: "absolute",
           top: insets.top,
@@ -261,10 +299,17 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
         }}
       >
         {weather ? (
-          <View>
-            <Text className="font-[SoraBold] text-white text-3xl">
-              {`${weather.location.name}, ${weather.location.country}`}
+          <View className="flex-col">
+            <Text
+              className="font-[SoraBold] text-white text-3xl"
+              style={{
+                flex: 1,
+                maxWidth: `${80}%`, // Adjust the percentage as needed
+              }}
+            >
+              {weather.location.name}, {weather.location.country}
             </Text>
+            {/* <Text className="font-[SoraBold] text-white text-3xl"></Text> */}
 
             <Text className="text-white text-base font-medium">
               Last update weather: {getTime(weather.current.last_updated)}
@@ -274,13 +319,22 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
           <LoaderComponent />
         )}
 
-        <View className="flex-row gap-x-2 items-center">
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SearchWeather", {})}
-            className="p-2"
-          >
-            <Fontisto name="search" size={24} color="white" />
-          </TouchableOpacity>
+        <View className="w-[20%] flex-row gap-x-2 items-center justify-end">
+          {
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("SearchWeather", {
+                  name: weather.location.name,
+                  region: weather.location.region,
+                  country: weather.location.country,
+                  temp: weather.current.temp_c,
+                })
+              }
+              className="p-2"
+            >
+              <Fontisto name="search" size={24} color="white" />
+            </TouchableOpacity>
+          }
 
           <TouchableOpacity
             onPress={() => navigation.navigate("SettingsWeather", {})}
@@ -311,7 +365,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route, navigation }) => {
             paddingTop: "5%",
             backgroundColor: "gray",
             width: dimensionsWidth,
-            height: dimensionsHeigth / 2,
+            height: dimensionsHeigth / 1.5,
           }}
         >
           <View className="relative rounded-3xl">

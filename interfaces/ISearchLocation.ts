@@ -1,9 +1,10 @@
 export interface ISearchLocation {
   country: string;
-  id: number;
-  lat: number;
-  lon: number;
+  // id: number;
+  // lat: number;
+  // lon: number;
   name: string;
   region: string;
-  url: string;
+  temp_c: number;
+  // url: string;
 }

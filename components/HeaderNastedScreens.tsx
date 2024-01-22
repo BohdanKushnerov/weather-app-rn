@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -9,12 +9,12 @@ type RootStackParamList = {
   SearchWeather: { cityName: string };
 };
 
-interface IHeaderNastedScreens {
+interface IHeaderNastedScreensProps {
   navigation: StackNavigationProp<RootStackParamList, "SearchWeather">;
   title: string;
 }
 
-const HeaderNastedScreens: FC<IHeaderNastedScreens> = ({
+const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
   navigation,
   title,
 }) => {

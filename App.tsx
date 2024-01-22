@@ -1,23 +1,15 @@
 import { FC } from "react";
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  Settings,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import BackBtn from "./components/BackBtn";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RootStackParamList } from "./customTypes/RootStackParamList";
 import CurrentWeather from "@screens/CurrentWeather";
 import SearchWeather from "@screens/SearchWeather";
 import SettingsWeather from "@screens/SettingsWeather";
 import HeaderNastedScreens from "@components/HeaderNastedScreens";
-// import qweq from "@screen/";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
