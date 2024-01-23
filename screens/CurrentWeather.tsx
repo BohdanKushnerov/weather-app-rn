@@ -73,11 +73,13 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
   const [paramCity, setParamCity] = useState("");
 
-  console.log("000000000000000000000000000000000000000000000000000000000000000000000000")
+  console.log(
+    "000000000000000000000000000000000000000000000000000000000000000000000000"
+  );
 
   useEffect(() => {
     if (params) {
-      console.log('qweqewqweqewqew')
+      console.log("qweqewqweqewqew");
       setParamCity(params?.cityName);
     }
   }, [params]);
@@ -90,13 +92,14 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
     setTenDaysWeather(null);
 
     console.log("==================paramCity", paramCity);
+    const refreshedLocation = await getCurrentLocation();
+    setLocation(refreshedLocation);
+
     try {
       if (selectedWeather === Weather.Today && !paramCity) {
         setWeather(null);
 
         console.log("обновляем, нету парамс, и сегодня");
-        const refreshedLocation = await getCurrentLocation();
-        setLocation(refreshedLocation);
 
         if (refreshedLocation) {
           const { latitude, longitude } = refreshedLocation.coords;
@@ -114,6 +117,58 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
         fetchWeatherForecast({ cityName: paramCity, days: 1 }).then((data) => {
           setWeather(data);
+        });
+      } else if (selectedWeather === Weather.Tomorrow && !paramCity) {
+        if (refreshedLocation) {
+          const { latitude, longitude } = refreshedLocation.coords;
+
+          fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
+            const secondDayForecast: IForecastDay[] = [
+              data.forecast.forecastday[1],
+            ];
+
+            const tomorrowForecast = {
+              location: data.location,
+              current: data.current,
+              forecast: {
+                forecastday: secondDayForecast,
+              },
+            };
+
+            setTomorrowWeather(tomorrowForecast);
+          });
+        }
+      } else if (paramCity && selectedWeather === Weather.Tomorrow) {
+        fetchWeatherForecast({ cityName: paramCity, days: 2 }).then((data) => {
+          const secondDayForecast: IForecastDay[] = [
+            data.forecast.forecastday[1],
+          ];
+
+          const tomorrowForecast = {
+            location: data.location,
+            current: data.current,
+            forecast: {
+              forecastday: secondDayForecast,
+            },
+          };
+
+          setTomorrowWeather(tomorrowForecast);
+        });
+      } else if (selectedWeather === Weather.TenDays && !paramCity) {
+        if (refreshedLocation) {
+          const { latitude, longitude } = refreshedLocation.coords;
+          fetchWeatherCurrent({ latitude, longitude, days: 10 }).then(
+            (data) => {
+              setTenDaysWeather(data);
+            }
+          );
+        }
+      } else if (paramCity && selectedWeather === Weather.TenDays) {
+        fetchWeatherForecast({
+          cityName: paramCity,
+          days: 10,
+        }).then((data) => {
+          setTenDaysWeather(data);
         });
       }
 
@@ -172,84 +227,84 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   }, [params]);
 
   // "Tomorrow";
-  // useEffect(() => {
-  //   if (selectedWeather !== "Tomorrow") return;
-  //   if (!params) {
-  //     // тут искать погоду по твоей геолокации на завтра
-  //     console.log("тут искать погоду по твоей геолокации на завтра");
-  //     if (location) {
-  //       const { latitude, longitude } = location.coords;
-  //       fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
-  //         const secondDayForecast: IForecastDay[] = [
-  //           data.forecast.forecastday[1],
-  //         ];
+  useEffect(() => {
+    if (selectedWeather !== "Tomorrow") return;
+    if (!params) {
+      // тут искать погоду по твоей геолокации на завтра
+      console.log("тут искать погоду по твоей геолокации на завтра");
+      if (location) {
+        const { latitude, longitude } = location.coords;
+        fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
+          const secondDayForecast: IForecastDay[] = [
+            data.forecast.forecastday[1],
+          ];
 
-  //         const tomorrowForecast = {
-  //           location: data.location,
-  //           current: data.current,
-  //           forecast: {
-  //             forecastday: secondDayForecast,
-  //           },
-  //         };
+          const tomorrowForecast = {
+            location: data.location,
+            current: data.current,
+            forecast: {
+              forecastday: secondDayForecast,
+            },
+          };
 
-  //         setTomorrowWeather(tomorrowForecast);
-  //       });
-  //     }
-  //   } else {
-  //     // тут искать погоду на завтра по локации что была в поиске на завтра
+          setTomorrowWeather(tomorrowForecast);
+        });
+      }
+    } else {
+      // тут искать погоду на завтра по локации что была в поиске на завтра
 
-  //     console.log(
-  //       "тут искать погоду на завтра по локации что была в поиске на завтра"
-  //     );
+      console.log(
+        "тут искать погоду на завтра по локации что была в поиске на завтра"
+      );
 
-  //     fetchWeatherForecast({ cityName: params.cityName, days: 2 }).then(
-  //       (data) => {
-  //         const secondDayForecast: IForecastDay[] = [
-  //           data.forecast.forecastday[1],
-  //         ];
+      fetchWeatherForecast({ cityName: params.cityName, days: 2 }).then(
+        (data) => {
+          const secondDayForecast: IForecastDay[] = [
+            data.forecast.forecastday[1],
+          ];
 
-  //         const tomorrowForecast = {
-  //           location: data.location,
-  //           current: data.current,
-  //           forecast: {
-  //             forecastday: secondDayForecast,
-  //           },
-  //         };
+          const tomorrowForecast = {
+            location: data.location,
+            current: data.current,
+            forecast: {
+              forecastday: secondDayForecast,
+            },
+          };
 
-  //         setTomorrowWeather(tomorrowForecast);
-  //       }
-  //     );
-  //   }
-  // }, [selectedWeather, params]);
+          setTomorrowWeather(tomorrowForecast);
+        }
+      );
+    }
+  }, [selectedWeather, params]);
 
   // "10 days"
-  // useEffect(() => {
-  //   if (selectedWeather !== "10 days") return;
+  useEffect(() => {
+    if (selectedWeather !== "10 days") return;
 
-  //   if (!params) {
-  //     // тут искать погоду по твоей геолокации на 10 дней
-  //     console.log("тут искать погоду по твоей геолокации на 10 дней");
+    if (!params) {
+      // тут искать погоду по твоей геолокации на 10 дней
+      console.log("тут искать погоду по твоей геолокации на 10 дней");
 
-  //     if (location) {
-  //       const { latitude, longitude } = location.coords;
-  //       fetchWeatherCurrent({ latitude, longitude, days: 10 }).then((data) => {
-  //         setTenDaysWeather(data);
-  //       });
-  //     }
-  //   } else {
-  //     console.log(
-  //       "тут искать погоду на завтра по локации что была в поиске на 10 дней"
-  //     );
-  //     // тут искать погоду на завтра по локации что была в поиске на 10 дней
+      if (location) {
+        const { latitude, longitude } = location.coords;
+        fetchWeatherCurrent({ latitude, longitude, days: 10 }).then((data) => {
+          setTenDaysWeather(data);
+        });
+      }
+    } else {
+      console.log(
+        "тут искать погоду на завтра по локации что была в поиске на 10 дней"
+      );
+      // тут искать погоду на завтра по локации что была в поиске на 10 дней
 
-  //     fetchWeatherForecast({
-  //       cityName: params.cityName,
-  //       days: 10,
-  //     }).then((data) => {
-  //       setTenDaysWeather(data);
-  //     });
-  //   }
-  // }, [selectedWeather, params]);
+      fetchWeatherForecast({
+        cityName: params.cityName,
+        days: 10,
+      }).then((data) => {
+        setTenDaysWeather(data);
+      });
+    }
+  }, [selectedWeather, params]);
 
   const handleSelectWeather = (selectedWeather: Weather) => {
     setSelectedWeather(selectedWeather);
