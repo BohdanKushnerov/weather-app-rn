@@ -71,30 +71,50 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
-  const onRefresh = useCallback(async () => {
+  const [paramCity, setParamCity] = useState("");
+
+  console.log("000000000000000000000000000000000000000000000000000000000000000000000000")
+
+  useEffect(() => {
+    if (params) {
+      console.log('qweqewqweqewqew')
+      setParamCity(params?.cityName);
+    }
+  }, [params]);
+
+  const onRefresh = async () => {
     setRefreshing(true);
 
+    scrollToTop();
+    setTomorrowWeather(null);
+    setTenDaysWeather(null);
+
+    console.log("==================paramCity", paramCity);
     try {
-      // Reset state to initial values
-      setLocation(null);
-      setSelectedWeather(Weather.Today);
-      setWeather(null);
-      setTomorrowWeather(null);
-      setTenDaysWeather(null);
+      if (selectedWeather === Weather.Today && !paramCity) {
+        setWeather(null);
 
-      // Fetch new data from the server or any other data source
-      // Example: Refetch current weather data based on the user's location
-      const refreshedLocation = await getCurrentLocation();
-      setLocation(refreshedLocation);
+        console.log("обновляем, нету парамс, и сегодня");
+        const refreshedLocation = await getCurrentLocation();
+        setLocation(refreshedLocation);
 
-      if (refreshedLocation && selectedWeather === Weather.Today) {
-        const { latitude, longitude } = refreshedLocation.coords;
-        const data = await fetchWeatherCurrent({
-          latitude,
-          longitude,
-          days: 1,
+        if (refreshedLocation) {
+          const { latitude, longitude } = refreshedLocation.coords;
+          const data = await fetchWeatherCurrent({
+            latitude,
+            longitude,
+            days: 1,
+          });
+          setWeather(data);
+        }
+      } else if (paramCity && selectedWeather === Weather.Today) {
+        setWeather(null);
+
+        console.log("обновляем, есть парамс и сегодня");
+
+        fetchWeatherForecast({ cityName: paramCity, days: 1 }).then((data) => {
+          setWeather(data);
         });
-        setWeather(data);
       }
 
       // Additional logic for other weather types (Tomorrow, 10 days) if needed...
@@ -104,12 +124,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
       // After refreshing, set refreshing to false
       setRefreshing(false);
     }
-  }, [selectedWeather]);
+  };
 
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
     (async () => {
-
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status === "granted") {
         try {
@@ -124,7 +143,10 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
   // if (location) current weather in current location
   useEffect(() => {
-    if (location && selectedWeather === Weather.Today) {
+    if (location && selectedWeather === Weather.Today && !refreshing) {
+      console.log(
+        "==========================================11111111111111111111111"
+      );
       const { latitude, longitude } = location.coords;
 
       fetchWeatherCurrent({ latitude, longitude, days: 1 }).then((data) => {
@@ -136,8 +158,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   // params.cityName && "Today"
   useEffect(() => {
     if (params === undefined) return;
-    resetWeather();
-    if (params.cityName) {
+    console.log("======================================22222222222222222222");
+
+    if (params.cityName && !refreshing) {
+      resetWeather();
+
       fetchWeatherForecast({ cityName: params.cityName, days: 1 }).then(
         (data) => {
           setWeather(data);
@@ -147,84 +172,84 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   }, [params]);
 
   // "Tomorrow";
-  useEffect(() => {
-    if (selectedWeather !== "Tomorrow") return;
-    if (!params) {
-      // тут искать погоду по твоей геолокации на завтра
-      console.log("тут искать погоду по твоей геолокации на завтра");
-      if (location) {
-        const { latitude, longitude } = location.coords;
-        fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
-          const secondDayForecast: IForecastDay[] = [
-            data.forecast.forecastday[1],
-          ];
+  // useEffect(() => {
+  //   if (selectedWeather !== "Tomorrow") return;
+  //   if (!params) {
+  //     // тут искать погоду по твоей геолокации на завтра
+  //     console.log("тут искать погоду по твоей геолокации на завтра");
+  //     if (location) {
+  //       const { latitude, longitude } = location.coords;
+  //       fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
+  //         const secondDayForecast: IForecastDay[] = [
+  //           data.forecast.forecastday[1],
+  //         ];
 
-          const tomorrowForecast = {
-            location: data.location,
-            current: data.current,
-            forecast: {
-              forecastday: secondDayForecast,
-            },
-          };
+  //         const tomorrowForecast = {
+  //           location: data.location,
+  //           current: data.current,
+  //           forecast: {
+  //             forecastday: secondDayForecast,
+  //           },
+  //         };
 
-          setTomorrowWeather(tomorrowForecast);
-        });
-      }
-    } else {
-      // тут искать погоду на завтра по локации что была в поиске на завтра
+  //         setTomorrowWeather(tomorrowForecast);
+  //       });
+  //     }
+  //   } else {
+  //     // тут искать погоду на завтра по локации что была в поиске на завтра
 
-      console.log(
-        "тут искать погоду на завтра по локации что была в поиске на завтра"
-      );
+  //     console.log(
+  //       "тут искать погоду на завтра по локации что была в поиске на завтра"
+  //     );
 
-      fetchWeatherForecast({ cityName: params.cityName, days: 2 }).then(
-        (data) => {
-          const secondDayForecast: IForecastDay[] = [
-            data.forecast.forecastday[1],
-          ];
+  //     fetchWeatherForecast({ cityName: params.cityName, days: 2 }).then(
+  //       (data) => {
+  //         const secondDayForecast: IForecastDay[] = [
+  //           data.forecast.forecastday[1],
+  //         ];
 
-          const tomorrowForecast = {
-            location: data.location,
-            current: data.current,
-            forecast: {
-              forecastday: secondDayForecast,
-            },
-          };
+  //         const tomorrowForecast = {
+  //           location: data.location,
+  //           current: data.current,
+  //           forecast: {
+  //             forecastday: secondDayForecast,
+  //           },
+  //         };
 
-          setTomorrowWeather(tomorrowForecast);
-        }
-      );
-    }
-  }, [selectedWeather, params]);
+  //         setTomorrowWeather(tomorrowForecast);
+  //       }
+  //     );
+  //   }
+  // }, [selectedWeather, params]);
 
   // "10 days"
-  useEffect(() => {
-    if (selectedWeather !== "10 days") return;
+  // useEffect(() => {
+  //   if (selectedWeather !== "10 days") return;
 
-    if (!params) {
-      // тут искать погоду по твоей геолокации на 10 дней
-      console.log("тут искать погоду по твоей геолокации на 10 дней");
+  //   if (!params) {
+  //     // тут искать погоду по твоей геолокации на 10 дней
+  //     console.log("тут искать погоду по твоей геолокации на 10 дней");
 
-      if (location) {
-        const { latitude, longitude } = location.coords;
-        fetchWeatherCurrent({ latitude, longitude, days: 10 }).then((data) => {
-          setTenDaysWeather(data);
-        });
-      }
-    } else {
-      console.log(
-        "тут искать погоду на завтра по локации что была в поиске на 10 дней"
-      );
-      // тут искать погоду на завтра по локации что была в поиске на 10 дней
+  //     if (location) {
+  //       const { latitude, longitude } = location.coords;
+  //       fetchWeatherCurrent({ latitude, longitude, days: 10 }).then((data) => {
+  //         setTenDaysWeather(data);
+  //       });
+  //     }
+  //   } else {
+  //     console.log(
+  //       "тут искать погоду на завтра по локации что была в поиске на 10 дней"
+  //     );
+  //     // тут искать погоду на завтра по локации что была в поиске на 10 дней
 
-      fetchWeatherForecast({
-        cityName: params.cityName,
-        days: 10,
-      }).then((data) => {
-        setTenDaysWeather(data);
-      });
-    }
-  }, [selectedWeather, params]);
+  //     fetchWeatherForecast({
+  //       cityName: params.cityName,
+  //       days: 10,
+  //     }).then((data) => {
+  //       setTenDaysWeather(data);
+  //     });
+  //   }
+  // }, [selectedWeather, params]);
 
   const handleSelectWeather = (selectedWeather: Weather) => {
     setSelectedWeather(selectedWeather);
@@ -284,14 +309,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
         <View className="w-[20%] flex-row gap-x-2 items-center justify-end">
           {
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("SearchWeather", {
-                  // name: weather.location.name,
-                  // region: weather.location.region,
-                  // country: weather.location.country,
-                  // temp: weather.current.temp_c,
-                })
-              }
+              onPress={() => navigation.navigate("SearchWeather", {})}
               className="p-2"
             >
               <Fontisto name="search" size={24} color="white" />
