@@ -24,14 +24,14 @@ const CityInput: FC<ICityInputProps> = ({
   };
 
   return (
-    <View className="h-10 flex-row justify-end items-center rounded-full">
+    <View className="h-14 flex-row justify-end items-center">
       <TextInput
         autoFocus={true}
         value={city}
         onChangeText={handleChangeCity}
         placeholder="Search city"
-        placeholderTextColor={"white"}
-        className="w-full pl-6 h-10 pb-1 flex-1 text-base bg-inherit rounded-full bg-gray-600 font-[SoraBold] placeholder:text-2xl text-white"
+        placeholderTextColor="white"
+        className="w-full pl-6 h-14 pb-1 flex-1 text-base rounded-xl border bg-slate-500 font-[SoraBold] placeholder:text-2xl text-white"
       />
 
       {isLoading && (

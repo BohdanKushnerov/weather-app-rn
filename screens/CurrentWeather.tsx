@@ -22,7 +22,7 @@ import ForecastDays from "@components/ForecastDays";
 import LocationCityWeatherInfo from "@components/LocationCityWeatherInfo";
 import AdditionalInfo from "@components/AdditionalInfo";
 import AirQuality from "@components/AirQuality";
-import HourlyForecast from "@components/HourForecast";
+import HourlyForecast from "@components/HourlyForecast";
 import SelectWeatherButtons from "@components/SelectWeatherButtons";
 import TomorrowCityWeather from "@components/TomorrowCityWeather";
 import LoaderComponent from "@components/LoaderComponent";
@@ -106,52 +106,14 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
     }
   }, [selectedWeather]);
 
-  // const onRefresh = useCallback(() => {
-  //   setRefreshing(true);
-
-  //   setTimeout(() => {
-  //     setRefreshing(false);
-  //   }, 1000);
-  // }, []);
-
   // requestForegroundPermissionsAsync + location
   useEffect(() => {
     (async () => {
-      console.log("requestForegroundPermissionsAsync");
 
       let { status } = await Location.requestForegroundPermissionsAsync();
-      // console.log("status", status);
       if (status === "granted") {
         try {
-          // Location.getCurrentPositionAsync({
-          //   accuracy: Location.Accuracy.Balanced,
-          // })
-          //   .then((location) => {
-          //     console.log("location", location);
-          //     setLocation(location);
-          //   })
-          //   .catch((err) => console.log("====err then", err))
-          //   .finally(() => console.log("finally"));
-          // function getCurrentLocation() {
-          //   const timeout = 5000;
-          //   return new Promise(async (resolve, reject) => {
-          //     setTimeout(() => {
-          //       reject(
-          //         new Error(
-          //           `Error getting gps location after ${(timeout * 2) / 1000} s`
-          //         )
-          //       );
-          //     }, timeout * 2);
-          //     setTimeout(async () => {
-          //       resolve(await Location.getLastKnownPositionAsync());
-          //       console.log("getLastKnownPositionAsync", 1);
-          //     }, timeout);
-          //     resolve(await Location.getCurrentPositionAsync());
-          //     console.log("getCurrentPositionAsync", 2);
-          //   });
-          // }
           const location = await getCurrentLocation();
-          console.log("first", location);
           location && setLocation(location);
         } catch (error) {
           console.log("=====error try", error);
@@ -324,10 +286,10 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("SearchWeather", {
-                  name: weather.location.name,
-                  region: weather.location.region,
-                  country: weather.location.country,
-                  temp: weather.current.temp_c,
+                  // name: weather.location.name,
+                  // region: weather.location.region,
+                  // country: weather.location.country,
+                  // temp: weather.current.temp_c,
                 })
               }
               className="p-2"

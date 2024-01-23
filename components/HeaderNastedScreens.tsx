@@ -26,8 +26,8 @@ const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
         paddingTop: insets.top,
       }}
     >
-      <View className="relative h-16 flex-row items-center mx-[16px] bg-orange-200">
-        <View className="absolute left-0 z-10">
+      <View className="relative h-16 flex-row items-center pl-[16px] w-full border-b">
+        <View className="absolute left-4 z-10">
           <GoBackBtn navigation={navigation} />
         </View>
         <Text className="w-full text-center font-[SoraBold] text-black text-3xl">

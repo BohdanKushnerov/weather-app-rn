@@ -44,6 +44,8 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
     filteredHours = weather?.forecast?.forecastday[0].hour || [];
   }
 
+  console.log("filteredHours", filteredHours);
+
   return (
     <>
       {weather ? (

@@ -14,7 +14,7 @@ const CitiesList: FC<ICitiesListProps> = ({
   handleClickLocation,
 }) => {
   return (
-    <View className="absolute top-10 z-10 w-full bg-gray-300 rounded-3xl">
+    <View className="absolute top-14 z-10 w-full bg-gray-300 rounded-3xl border shadow shadow-black">
       {searchLocations.map((loc, index) => {
         const showBorder = index + 1 != searchLocations.length;
         const borderClass = showBorder ? " border-b-2 border-b-gray-400" : "";

@@ -1,18 +1,21 @@
 import { FC, useEffect, useState } from "react";
 import {
+  Keyboard,
   ScrollView,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from "react-native";
-import { RouteProp } from "@react-navigation/native";
+// import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import * as Location from "expo-location";
+// import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import CityInput from "@components/CityInput";
 import CitiesList from "@components/CitiesList";
@@ -28,7 +31,7 @@ import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type SearchWeatherRouteProp = RouteProp<RootStackParamList, "SearchWeather">;
+// type SearchWeatherRouteProp = RouteProp<RootStackParamList, "SearchWeather">;
 
 type SearchWeatherNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -36,7 +39,7 @@ type SearchWeatherNavigationProp = StackNavigationProp<
 >;
 
 interface ISearchWeatherProps {
-  route: SearchWeatherRouteProp;
+  // route: SearchWeatherRouteProp;
   navigation: SearchWeatherNavigationProp;
 }
 
@@ -52,9 +55,10 @@ const tempFn = async (city: string) => {
 };
 
 const SearchWeather: FC<ISearchWeatherProps> = ({
-  route: { params },
+  // route: { params },
   navigation,
 }) => {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [myLocationWeather, setMyLocationWeather] =
     useState<IForecastWeather | null>(null);
   const [savedLocations, setSavedLocations] = useState<
@@ -65,26 +69,41 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
     ISearchLocation[] | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEdit, setEdit] = useState(false);
 
   const windowDimensions = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
-  console.log("myLocationWeather", myLocationWeather);
+  useEffect(() => {
+    const showSubBtns = Keyboard.addListener("keyboardDidShow", () => {
+      setIsShowKeyboard(true);
+    });
+    const hideSubBtns = Keyboard.addListener("keyboardDidHide", () => {
+      setIsShowKeyboard(false);
+    });
+
+    return () => {
+      showSubBtns.remove();
+      hideSubBtns.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const getMyLocation = async () => {
       const myLocation = await getCurrentLocation();
 
-      const { latitude, longitude } = myLocation.coords;
+      if (myLocation) {
+        const { latitude, longitude } = myLocation.coords;
 
-      const currentWeather = await fetchCurrentForecastLocation({
-        latitude,
-        longitude,
-      });
+        const currentWeather = await fetchCurrentForecastLocation({
+          latitude,
+          longitude,
+        });
 
-      setMyLocationWeather(currentWeather);
+        setMyLocationWeather(currentWeather);
+      }
     };
 
     getMyLocation();
@@ -95,7 +114,6 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
       const existingDataString: string | null = await AsyncStorage.getItem(
         "search-history"
       );
-      console.log("existingData", existingDataString);
 
       const existingArray: ISearchHistory[] = existingDataString
         ? JSON.parse(existingDataString)
@@ -113,7 +131,6 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
 
           const cityInfo = await Promise.all(weatherPromises);
           setSavedLocations(cityInfo);
-          console.log("cityInfo", cityInfo);
         };
 
         fetchDataForSavedLocations();
@@ -148,20 +165,17 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
       try {
         // AsyncStorage.removeItem("search-history");
         const existingData = await AsyncStorage.getItem("search-history");
-        console.log("existingData", existingData);
 
         const existingArray: ISearchHistory[] = existingData
           ? JSON.parse(existingData)
           : [];
-        console.log("existingArray", existingArray);
 
         const search = existingArray.findIndex(
           (city) => city.name === value.name
         );
-        console.log("search", search);
 
         if (search === -1) {
-          const newArray = [...existingArray, value];
+          const newArray = [value, ...existingArray];
           const jsonValue = JSON.stringify(newArray);
           await AsyncStorage.setItem("search-history", jsonValue);
         } else {
@@ -185,100 +199,192 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
     }
   };
 
-  return (
-    <View
-      style={{
-        height: dimensionsHeigth - 64 - insets.top,
-        paddingBottom: 16,
-        backgroundColor: "green",
-      }}
-    >
-      <View className="flex-1 relative bg-green-100">
-        <CityInput
-          isLoading={isLoading}
-          city={city}
-          handleChangeCity={handleChangeCity}
-        />
-        {searchLocations && searchLocations.length > 0 ? (
-          <CitiesList
-            searchLocations={searchLocations}
-            handleClickLocation={handleClickLocation}
-          />
-        ) : null}
+  const handleDeleteCityFromStorage = async (name: string, region: string) => {
+    // AsyncStorage.removeItem("search-history");
+    if (savedLocations) {
+      const newArr = savedLocations.filter(
+        (city) => city.name !== name && city.region !== region
+      );
+      setSavedLocations([...newArr]);
+      console.log("newArr", newArr);
+      const jsonValue = JSON.stringify(newArr);
+      await AsyncStorage.setItem("search-history", jsonValue);
+    }
+  };
 
-        <View className="flex-col items-center">
-          <View className="flex-row items-center gap-x-2">
-            <Entypo name="home" size={24} color="black" />
-            {/* <Text>Current position</Text> */}
-            <Text>Current weather</Text>
-          </View>
-          <TouchableOpacity
-            className="w-full flex-row justify-between items-center py-2 px-4 bg-gray-400 rounded-md border"
-            onPress={() =>
-              navigation.navigate("CurrentWeather", {
-                cityName: params.name,
-              })
-            }
-          >
-            <View className="flex-col">
-              <Text>{myLocationWeather?.location.name}</Text>
-              <View className="flex-row">
-                <Text>{myLocationWeather?.location.region}, </Text>
-                <Text>{myLocationWeather?.location.country}</Text>
-              </View>
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View
+        className="bg-green-100"
+        style={{
+          height: dimensionsHeigth - 64 - insets.top,
+          width: dimensionsWidth,
+          paddingHorizontal: 8,
+          paddingTop: 1,
+          paddingBottom: 1,
+        }}
+      >
+        <View className="flex-1 relative ">
+          <CityInput
+            isLoading={isLoading}
+            city={city}
+            handleChangeCity={handleChangeCity}
+          />
+          {searchLocations && searchLocations.length > 0 ? (
+            <CitiesList
+              searchLocations={searchLocations}
+              handleClickLocation={handleClickLocation}
+            />
+          ) : null}
+
+          <View className="flex-col items-center">
+            <View className="flex-row items-center gap-x-2 p-2">
+              <Entypo name="home" size={24} color="black" />
+              <Text className="font-[SoraBold] text-base tracking-[0.25px] leading-5">
+                Current location weather
+              </Text>
             </View>
-            <Text>{myLocationWeather?.current.temp_c}&#176;</Text>
-          </TouchableOpacity>
+            {myLocationWeather ? (
+              <TouchableOpacity
+                className="w-full flex-row justify-between items-center py-2 px-4 bg-gray-300 rounded-md border"
+                onPress={() =>
+                  navigation.navigate("CurrentWeather", {
+                    cityName: myLocationWeather?.location.name,
+                  })
+                }
+              >
+                <View className="flex-col">
+                  <Text className="font-[SoraSemiBold] text-base tracking-[0.25px] leading-5">
+                    {myLocationWeather?.location.name}
+                  </Text>
+                  <View className="flex-row">
+                    <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
+                      {myLocationWeather?.location.region},
+                    </Text>
+                    <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
+                      {myLocationWeather?.location.country}
+                    </Text>
+                  </View>
+                </View>
+                <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
+                  {myLocationWeather?.current.temp_c}&#176;
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View className="h-[50px]">
+                <LoaderComponent />
+              </View>
+            )}
+          </View>
+
+          {savedLocations ? (
+            <View className="relative flex-1 flex-col items-center">
+              <View className="flex-row items-center gap-x-2 p-2">
+                <FontAwesome name="history" size={24} color="black" />
+                <Text className="font-[SoraBold] text-lg tracking-[0.25px] leading-5">
+                  History locations
+                </Text>
+              </View>
+              {savedLocations.length > 0 && (
+                <TouchableOpacity
+                  className={`absolute top-1 right-0 py-2 px-4 flex-row gap-x-1 border rounded-md ${
+                    isEdit && "border-red-500"
+                  }`}
+                  onPress={() => {
+                    setEdit((prev) => !prev);
+                    keyboardHide();
+                  }}
+                >
+                  <Entypo
+                    name="edit"
+                    size={16}
+                    color={isEdit ? "red" : "black"}
+                  />
+                  <Text
+                    className={`font-[SoraSemiBold] text-base tracking-[0.25px] leading-5 ${
+                      isEdit && "text-red-500 border-red-500"
+                    }`}
+                  >
+                    Edit
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <ScrollView
+                style={{ width: dimensionsWidth, height: 300, flexGrow: 1 }}
+                contentContainerStyle={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  paddingHorizontal: 8,
+                }}
+              >
+                {savedLocations?.map((loc) => {
+                  return (
+                    <View className="flex-row justify-between bg-green-200 rounded-xl border border-green-400">
+                      <TouchableOpacity
+                        className={`${
+                          // "w-full"
+                          isEdit ? "w-[85%]" : "w-full"
+                        } flex-row justify-between items-center py-2 px-4`}
+                        key={loc.name}
+                        onPress={() =>
+                          navigation.navigate("CurrentWeather", {
+                            cityName: loc.name,
+                          })
+                        }
+                        // disabled={isEdit}
+                      >
+                        <View className="flex-col">
+                          <Text className="font-[SoraSemiBold] text-base tracking-[0.25px] leading-5">
+                            {loc.name}
+                          </Text>
+                          <View className="flex-row">
+                            <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
+                              {loc.region},
+                            </Text>
+                            <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
+                              {loc.country}
+                            </Text>
+                          </View>
+                        </View>
+                        <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
+                          {loc.temp_c}&#176;
+                        </Text>
+                      </TouchableOpacity>
+
+                      {isEdit && (
+                        <TouchableOpacity
+                          className={`w-[15%] flex justify-center items-center py-2 rounded-md border ${
+                            isEdit && "bg-red-50 border-red-500"
+                          }`}
+                          onPress={() =>
+                            handleDeleteCityFromStorage(loc.name, loc.region)
+                          }
+                        >
+                          <AntDesign name="delete" size={24} color="red" />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          ) : (
+            <View className="h-[100px]">
+              <LoaderComponent />
+            </View>
+          )}
         </View>
 
-        {savedLocations ? (
-          <View className="flex-1 flex-col items-center">
-            <View className="flex-row items-center gap-x-2">
-              <FontAwesome name="history" size={24} color="black" />
-              <Text>History locations</Text>
-            </View>
-
-            <ScrollView
-              style={{ width: dimensionsWidth, height: 300, flexGrow: 1 }}
-              contentContainerStyle={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
-              }}
-            >
-              {savedLocations?.map((loc) => {
-                return (
-                  <TouchableOpacity
-                    className="flex-row justify-between items-center py-2 px-4 bg-gray-400 rounded-md border"
-                    key={loc.name}
-                    onPress={() =>
-                      navigation.navigate("CurrentWeather", {
-                        cityName: loc.name,
-                      })
-                    }
-                  >
-                    <View className="flex-col">
-                      <Text>{loc.name}</Text>
-                      <View className="flex-row">
-                        <Text>{loc.region}, </Text>
-                        <Text>{loc.country}</Text>
-                      </View>
-                    </View>
-                    <Text>{loc.temp_c}&#176;</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        ) : (
-          <View className="h-[100px]">
-            <LoaderComponent />
-          </View>
-        )}
+        <StatusBar style="dark" />
       </View>
-
-      <StatusBar style="dark" />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
