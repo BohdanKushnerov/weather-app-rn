@@ -69,7 +69,7 @@ const AdditionalInfo: FC<IAdditionalInfoProps> = ({ weather }) => {
                 Pressure
               </Text>
               <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-                {weather.current.pressure_mb} Mbar
+                {weather.current.pressure_mb} mBar
               </Text>
             </View>
           </View>
