@@ -1,38 +1,30 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
-  ImageBackground,
   NativeScrollEvent,
   NativeSyntheticEvent,
   RefreshControl,
   ScrollView,
-  Text,
-  TouchableOpacity,
   View,
-  useWindowDimensions,
 } from "react-native";
 import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, Fontisto } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 
-import ForecastDays from "@components/ForecastDays";
-import LocationCityWeatherInfo from "@components/LocationCityWeatherInfo";
-import AdditionalInfo from "@components/AdditionalInfo";
-import AirQuality from "@components/AirQuality";
-import HourlyForecast from "@components/HourlyForecast";
 import SelectWeatherButtons from "@components/SelectWeatherButtons";
-import TomorrowCityWeather from "@components/TomorrowCityWeather";
-import LoaderComponent from "@components/LoaderComponent";
+
 import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
-import { getTime } from "@utils/getTime";
 import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastDay } from "@interfaces/IForecastDay";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
 import { Weather } from "@customEnums/Weather";
+import HeaderCurrentWeather from "@components/HeaderCurrentWeather";
+import WeatherMainInfoWithBackground from "@components/WeatherMainInfoWithBackground";
+import ScrollUpBtn from "@components/ScrollUpBtn";
+import TodayAdditionalWeather from "@components/TodayAdditionalWeather";
+import TomorrowAdditionalWeather from "@components/TomorrowAdditionalWeather";
+import ForecastTenDays from "@components/ForecastTenDays";
 
 type CurrentWeatherRouteProp = RouteProp<RootStackParamList, "CurrentWeather">;
 
@@ -46,10 +38,7 @@ interface ICurrentWeatherProps {
   navigation: CurrentWeatherNavigationProp;
 }
 
-const CurrentWeather: FC<ICurrentWeatherProps> = ({
-  route: { params },
-  navigation,
-}) => {
+const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -66,20 +55,19 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   const [isScrolling, setIsScrolling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  const windowDimensions = useWindowDimensions();
-  const insets = useSafeAreaInsets();
+  // const windowDimensions = useWindowDimensions();
+  // const insets = useSafeAreaInsets();
 
-  const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
+  // const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   const [paramCity, setParamCity] = useState("");
 
-  console.log(
-    "000000000000000000000000000000000000000000000000000000000000000000000000"
-  );
+  // console.log(
+  //   "000000000000000000000000000000000000000000000000000000000000000000000000"
+  // );
 
   useEffect(() => {
     if (params) {
-      console.log("qweqewqweqewqew");
       setParamCity(params?.cityName);
     }
   }, [params]);
@@ -91,92 +79,43 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
     setTomorrowWeather(null);
     setTenDaysWeather(null);
 
-    console.log("==================paramCity", paramCity);
-    const refreshedLocation = await getCurrentLocation();
-    setLocation(refreshedLocation);
-
     try {
-      if (selectedWeather === Weather.Today && !paramCity) {
-        setWeather(null);
+      const refreshedLocation = await getCurrentLocation();
+      setLocation(refreshedLocation);
 
-        console.log("обновляем, нету парамс, и сегодня");
-
+      const fetchWeather = async (days: number) => {
         if (refreshedLocation) {
           const { latitude, longitude } = refreshedLocation.coords;
-          const data = await fetchWeatherCurrent({
-            latitude,
-            longitude,
-            days: 1,
-          });
-          setWeather(data);
-        }
-      } else if (paramCity && selectedWeather === Weather.Today) {
-        setWeather(null);
+          const data = paramCity
+            ? await fetchWeatherForecast({ cityName: paramCity, days })
+            : await fetchWeatherCurrent({ latitude, longitude, days });
 
-        console.log("обновляем, есть парамс и сегодня");
-
-        fetchWeatherForecast({ cityName: paramCity, days: 1 }).then((data) => {
-          setWeather(data);
-        });
-      } else if (selectedWeather === Weather.Tomorrow && !paramCity) {
-        if (refreshedLocation) {
-          const { latitude, longitude } = refreshedLocation.coords;
-
-          fetchWeatherCurrent({ latitude, longitude, days: 2 }).then((data) => {
-            const secondDayForecast: IForecastDay[] = [
-              data.forecast.forecastday[1],
-            ];
-
+          if (days === 1) {
+            setWeather(data);
+          } else if (days === 2) {
+            const secondDayForecast = [data.forecast.forecastday[1]];
             const tomorrowForecast = {
               location: data.location,
               current: data.current,
-              forecast: {
-                forecastday: secondDayForecast,
-              },
+              forecast: { forecastday: secondDayForecast },
             };
-
             setTomorrowWeather(tomorrowForecast);
-          });
+          } else if (days === 10) {
+            setTenDaysWeather(data);
+          }
         }
-      } else if (paramCity && selectedWeather === Weather.Tomorrow) {
-        fetchWeatherForecast({ cityName: paramCity, days: 2 }).then((data) => {
-          const secondDayForecast: IForecastDay[] = [
-            data.forecast.forecastday[1],
-          ];
+      };
 
-          const tomorrowForecast = {
-            location: data.location,
-            current: data.current,
-            forecast: {
-              forecastday: secondDayForecast,
-            },
-          };
-
-          setTomorrowWeather(tomorrowForecast);
-        });
-      } else if (selectedWeather === Weather.TenDays && !paramCity) {
-        if (refreshedLocation) {
-          const { latitude, longitude } = refreshedLocation.coords;
-          fetchWeatherCurrent({ latitude, longitude, days: 10 }).then(
-            (data) => {
-              setTenDaysWeather(data);
-            }
-          );
-        }
-      } else if (paramCity && selectedWeather === Weather.TenDays) {
-        fetchWeatherForecast({
-          cityName: paramCity,
-          days: 10,
-        }).then((data) => {
-          setTenDaysWeather(data);
-        });
+      if (selectedWeather === Weather.Today) {
+        await fetchWeather(1);
+      } else if (selectedWeather === Weather.Tomorrow) {
+        await fetchWeather(2);
+      } else if (selectedWeather === Weather.TenDays) {
+        await fetchWeather(10);
       }
-
-      // Additional logic for other weather types (Tomorrow, 10 days) if needed...
     } catch (error) {
       console.error("Error while refreshing:", error);
     } finally {
-      // After refreshing, set refreshing to false
       setRefreshing(false);
     }
   };
@@ -330,55 +269,17 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
   };
 
   return (
-    <View className="relative h-screen bg-green-100">
+    <View
+      className="relative bg-green-100"
+      style={
+        {
+          // marginTop: insets.top,
+          // marginBottom: insets.bottom,
+        }
+      }
+    >
       {/* goSearch + menu */}
-      <View
-        className={`w-full p-2 z-10 flex flex-row items-center justify-between bg-gray-700/50 rounded-3xl`}
-        style={{
-          position: "absolute",
-          top: insets.top,
-          right: 0,
-        }}
-      >
-        {weather ? (
-          <View className="flex-col">
-            <Text
-              className="font-[SoraBold] text-white text-3xl"
-              style={{
-                flex: 1,
-                maxWidth: `${80}%`, // Adjust the percentage as needed
-              }}
-            >
-              {weather.location.name}, {weather.location.country}
-            </Text>
-            {/* <Text className="font-[SoraBold] text-white text-3xl"></Text> */}
-
-            <Text className="text-white text-base font-medium">
-              Last update weather: {getTime(weather.current.last_updated)}
-            </Text>
-          </View>
-        ) : (
-          <LoaderComponent />
-        )}
-
-        <View className="w-[20%] flex-row gap-x-2 items-center justify-end">
-          {
-            <TouchableOpacity
-              onPress={() => navigation.navigate("SearchWeather", {})}
-              className="p-2"
-            >
-              <Fontisto name="search" size={24} color="white" />
-            </TouchableOpacity>
-          }
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SettingsWeather", {})}
-            className="p-2"
-          >
-            <Entypo name="menu" size={36} color="white" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderCurrentWeather weather={weather} />
 
       <ScrollView
         ref={scrollViewRef}
@@ -393,27 +294,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
           gap: 16,
         }}
       >
-        <ImageBackground
-          source={require("../assets/valentin-muller-bWtd1ZyEy6w-unsplash.jpg")}
-          resizeMode="cover"
-          style={{
-            paddingTop: "5%",
-            backgroundColor: "gray",
-            width: dimensionsWidth,
-            height: dimensionsHeigth / 1.5,
-          }}
-        >
-          <View className="relative rounded-3xl">
-            {(selectedWeather === Weather.Today ||
-              selectedWeather === Weather.TenDays) && (
-              <LocationCityWeatherInfo weather={weather} />
-            )}
-
-            {selectedWeather === "Tomorrow" && (
-              <TomorrowCityWeather weather={tomorrowWeather} />
-            )}
-          </View>
-        </ImageBackground>
+        <WeatherMainInfoWithBackground
+          weather={weather}
+          tomorrowWeather={tomorrowWeather}
+          selectedWeather={selectedWeather}
+        />
 
         <SelectWeatherButtons
           selectedWeather={selectedWeather}
@@ -422,70 +307,30 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({
 
         {/* Today */}
         {selectedWeather === Weather.Today && (
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <AdditionalInfo weather={weather} />
-            <HourlyForecast
-              weather={weather}
-              selectedWeather={selectedWeather}
-            />
-            {weather ? (
-              <AirQuality airQuality={weather.current.air_quality} />
-            ) : (
-              <LoaderComponent />
-            )}
-          </View>
+          <TodayAdditionalWeather
+            weather={weather}
+            selectedWeather={selectedWeather}
+          />
         )}
 
         {/* Tomorrow */}
-        {selectedWeather === "Tomorrow" && (
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <AdditionalInfo weather={tomorrowWeather} />
-            <HourlyForecast
-              weather={tomorrowWeather}
-              selectedWeather={selectedWeather}
-            />
-
-            {tomorrowWeather ? (
-              <AirQuality
-                airQuality={
-                  tomorrowWeather?.forecast.forecastday[0].day.air_quality
-                }
-              />
-            ) : (
-              <LoaderComponent />
-            )}
-          </View>
+        {selectedWeather === Weather.Tomorrow && (
+          <TomorrowAdditionalWeather
+            tomorrowWeather={tomorrowWeather}
+            selectedWeather={selectedWeather}
+          />
         )}
 
         {/* 10 days  */}
-        {selectedWeather === "10 days" && (
-          <ForecastDays weather={tenDaysWeather} />
+        {selectedWeather === Weather.TenDays && (
+          <ForecastTenDays weather={tenDaysWeather} />
         )}
 
         <StatusBar style="light" />
       </ScrollView>
 
       {/* Scroll button  */}
-      {isScrolling && (
-        <TouchableOpacity
-          className="absolute bottom-0 right-0 p-4"
-          onPress={scrollToTop}
-        >
-          <Feather name="arrow-up-circle" size={48} color="#858b8692" />
-        </TouchableOpacity>
-      )}
+      {isScrolling && <ScrollUpBtn scrollToTop={scrollToTop} />}
     </View>
   );
 };

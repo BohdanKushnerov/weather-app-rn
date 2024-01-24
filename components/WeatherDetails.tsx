@@ -8,11 +8,11 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 
-interface IAdditionalInfoProps {
+interface IWeatherDetailsProps {
   weather: IForecastWeather | null;
 }
 
-const AdditionalInfo: FC<IAdditionalInfoProps> = ({ weather }) => {
+const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
   return (
     <>
       {weather ? (
@@ -130,4 +130,4 @@ const AdditionalInfo: FC<IAdditionalInfoProps> = ({ weather }) => {
   );
 };
 
-export default AdditionalInfo;
+export default WeatherDetails;
