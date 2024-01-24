@@ -6,11 +6,11 @@ import { getFormattedDayName } from "@utils/getFormattedDayName";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { IForecastDay } from "@interfaces/IForecastDay";
 
-interface IForecastDaysProps {
+interface IForecastTenDaysProps {
   weather: IForecastWeather | null;
 }
 
-const ForecastDays: FC<IForecastDaysProps> = ({ weather }) => {
+const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
   return (
     <>
       {weather ? (
@@ -93,4 +93,4 @@ const ForecastDays: FC<IForecastDaysProps> = ({ weather }) => {
   );
 };
 
-export default ForecastDays;
+export default ForecastTenDays;

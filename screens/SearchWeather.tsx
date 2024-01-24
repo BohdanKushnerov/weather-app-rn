@@ -206,7 +206,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
         (city) => city.name !== name && city.region !== region
       );
       setSavedLocations([...newArr]);
-      console.log("newArr", newArr);
+      // console.log("newArr", newArr);
       const jsonValue = JSON.stringify(newArr);
       await AsyncStorage.setItem("search-history", jsonValue);
     }
@@ -326,13 +326,15 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
               >
                 {savedLocations?.map((loc) => {
                   return (
-                    <View className="flex-row justify-between bg-green-200 rounded-xl border border-green-400">
+                    <View
+                      className="flex-row justify-between bg-green-200 rounded-xl border border-green-400"
+                      key={(loc.name)}
+                    >
                       <TouchableOpacity
                         className={`${
                           // "w-full"
                           isEdit ? "w-[85%]" : "w-full"
                         } flex-row justify-between items-center py-2 px-4`}
-                        key={loc.name}
                         onPress={() =>
                           navigation.navigate("CurrentWeather", {
                             cityName: loc.name,

@@ -13,7 +13,7 @@ const SettingsWeather: FC = () => {
   // const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   return (
-    <View>
+    <View className="bg-red-300">
       <View className="flex-col gap-y-2 px-5 py-2">
         <View className="flex-row justify-between items-center">
           <Text>Temperature</Text>
@@ -34,7 +34,6 @@ const SettingsWeather: FC = () => {
           <Switch
             value={distance}
             onValueChange={() => setDistance((prev) => !prev)}
-            // disabled={false}
             activeText={"km"}
             inActiveText={"ml"}
             backgroundActive={"green"}
@@ -48,7 +47,6 @@ const SettingsWeather: FC = () => {
           <Switch
             value={pressure}
             onValueChange={() => setPressure((prev) => !prev)}
-            // disabled={false}
             activeText={"mBar"}
             inActiveText={"inHg"}
             backgroundActive={"green"}
@@ -62,7 +60,6 @@ const SettingsWeather: FC = () => {
           <Switch
             value={windSpeed}
             onValueChange={() => setWindSpeed((prev) => !prev)}
-            // disabled={false}
             activeText={"k/h"}
             inActiveText={"mph"}
             backgroundActive={"green"}
