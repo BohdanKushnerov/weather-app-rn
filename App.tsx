@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,6 +10,7 @@ import CurrentWeather from "@screens/CurrentWeather";
 import SearchWeather from "@screens/SearchWeather";
 import SettingsWeather from "@screens/SettingsWeather";
 import HeaderNastedScreens from "@components/HeaderNastedScreens";
+import { WeatherContextProvider } from "@context/WeatherContext";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -37,43 +38,45 @@ const App: FC = () => {
   }
 
   return (
-    <SafeAreaProvider style={{ flex: 1 }}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="CurrentWeather">
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="CurrentWeather"
-            component={CurrentWeather}
-          />
-          <Stack.Screen
-            name="SearchWeather"
-            component={SearchWeather}
-            options={({ navigation }) => ({
-              header: () => (
-                <HeaderNastedScreens
-                  navigation={navigation}
-                  title="SearchWeather"
-                />
-              ),
-            })}
-          />
+    <WeatherContextProvider>
+      <SafeAreaProvider style={{ flex: 1 }}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="CurrentWeather">
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="CurrentWeather"
+              component={CurrentWeather}
+            />
+            <Stack.Screen
+              name="SearchWeather"
+              component={SearchWeather}
+              options={({ navigation }) => ({
+                header: () => (
+                  <HeaderNastedScreens
+                    navigation={navigation}
+                    title="SearchWeather"
+                  />
+                ),
+              })}
+            />
 
-          <Stack.Screen
-            // options={{ headerShown: false }}
-            name="SettingsWeather"
-            component={SettingsWeather}
-            options={({ navigation }) => ({
-              header: () => (
-                <HeaderNastedScreens
-                  navigation={navigation}
-                  title="SettingsWeather"
-                />
-              ),
-            })}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+            <Stack.Screen
+              // options={{ headerShown: false }}
+              name="SettingsWeather"
+              component={SettingsWeather}
+              options={({ navigation }) => ({
+                header: () => (
+                  <HeaderNastedScreens
+                    navigation={navigation}
+                    title="SettingsWeather"
+                  />
+                ),
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </WeatherContextProvider>
   );
 };
 

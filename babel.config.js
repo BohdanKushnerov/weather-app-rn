@@ -17,6 +17,7 @@ module.exports = function (api) {
             "@interfaces": "./interfaces",
             "@customEnums": "./customEnums",
             "@customTypes": "./customTypes",
+            "@context": "./context",
           },
         },
       ],

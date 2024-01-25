@@ -2,15 +2,71 @@ import { FC, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
 import { Switch } from "react-native-switch";
+import {
+  DistanceUnit,
+  Language,
+  PressureUnit,
+  TemperatureUnit,
+  Theme,
+  WeatherSettings,
+  WindSpeedUnit,
+  useWeatherContext,
+} from "@context/WeatherContext";
 
 const SettingsWeather: FC = () => {
-  const [temp, setTemp] = useState(true);
-  const [windSpeed, setWindSpeed] = useState(true);
-  const [distance, setDistance] = useState(true);
-  const [pressure, setPressure] = useState(true);
+  const { weatherSettings, setWeatherSettings } = useWeatherContext();
 
+  // const [weatherSettings, setWeatherSettings] = useState<WeatherSettings>({
+  //   theme: Theme.Light,
+  //   lang: Language.English,
+  //   temp: TemperatureUnit.Celsius,
+  //   distance: DistanceUnit.Kilometers,
+  //   pressure: PressureUnit.Millibar,
+  //   windSpeed: WindSpeedUnit.KilometersPerHour,
+  // });
 
-  // const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  console.log("weatherContext", weatherSettings);
+  console.log("setWeatherSettings", setWeatherSettings);
+
+  const handleChangeTempValue = () => {
+    setWeatherSettings((prev) => ({
+      ...prev,
+      temp:
+        prev.temp === TemperatureUnit.Celsius
+          ? TemperatureUnit.Fahrenheit
+          : TemperatureUnit.Celsius,
+    }));
+  };
+
+  const handleChangeDistanceValue = () => {
+    setWeatherSettings((prev) => ({
+      ...prev,
+      distance:
+        prev.distance === DistanceUnit.Kilometers
+          ? DistanceUnit.Miles
+          : DistanceUnit.Kilometers,
+    }));
+  };
+
+  const handleChangePressureValue = () => {
+    setWeatherSettings((prev) => ({
+      ...prev,
+      pressure:
+        prev.pressure === PressureUnit.Millibar
+          ? PressureUnit.InchOfMercury
+          : PressureUnit.Millibar,
+    }));
+  };
+
+  const handleChangeWindSpeedValue = () => {
+    setWeatherSettings((prev) => ({
+      ...prev,
+      windSpeed:
+        prev.windSpeed === WindSpeedUnit.KilometersPerHour
+          ? WindSpeedUnit.MilesPerHour
+          : WindSpeedUnit.KilometersPerHour,
+    }));
+  };
 
   return (
     <View className="bg-red-300">
@@ -18,11 +74,11 @@ const SettingsWeather: FC = () => {
         <View className="flex-row justify-between items-center">
           <Text>Temperature</Text>
           <Switch
-            value={temp}
-            onValueChange={() => setTemp((prev) => !prev)}
+            value={weatherSettings.temp === TemperatureUnit.Celsius}
+            onValueChange={handleChangeTempValue}
             // disabled={false}
-            activeText={`${"\u00b0"}C`}
-            inActiveText={`${"\u00b0"}F`}
+            activeText={TemperatureUnit.Celsius}
+            inActiveText={TemperatureUnit.Fahrenheit}
             backgroundActive={"green"}
             backgroundInactive={"gray"}
             circleActiveColor={"#30a566"}
@@ -32,10 +88,10 @@ const SettingsWeather: FC = () => {
         <View className="flex-row justify-between items-center">
           <Text>Distance</Text>
           <Switch
-            value={distance}
-            onValueChange={() => setDistance((prev) => !prev)}
-            activeText={"km"}
-            inActiveText={"ml"}
+            value={weatherSettings.distance === DistanceUnit.Kilometers}
+            onValueChange={handleChangeDistanceValue}
+            activeText={DistanceUnit.Kilometers}
+            inActiveText={DistanceUnit.Miles}
             backgroundActive={"green"}
             backgroundInactive={"gray"}
             circleActiveColor={"#30a566"}
@@ -45,10 +101,10 @@ const SettingsWeather: FC = () => {
         <View className="flex-row justify-between items-center">
           <Text>Pressure</Text>
           <Switch
-            value={pressure}
-            onValueChange={() => setPressure((prev) => !prev)}
-            activeText={"mBar"}
-            inActiveText={"inHg"}
+            value={weatherSettings.pressure === PressureUnit.Millibar}
+            onValueChange={handleChangePressureValue}
+            activeText={PressureUnit.Millibar}
+            inActiveText={PressureUnit.InchOfMercury}
             backgroundActive={"green"}
             backgroundInactive={"gray"}
             circleActiveColor={"#30a566"}
@@ -58,10 +114,12 @@ const SettingsWeather: FC = () => {
         <View className="flex-row justify-between items-center">
           <Text>Wind Speed</Text>
           <Switch
-            value={windSpeed}
-            onValueChange={() => setWindSpeed((prev) => !prev)}
-            activeText={"k/h"}
-            inActiveText={"mph"}
+            value={
+              weatherSettings.windSpeed === WindSpeedUnit.KilometersPerHour
+            }
+            onValueChange={handleChangeWindSpeedValue}
+            activeText={WindSpeedUnit.KilometersPerHour}
+            inActiveText={WindSpeedUnit.MilesPerHour}
             backgroundActive={"green"}
             backgroundInactive={"gray"}
             circleActiveColor={"#30a566"}

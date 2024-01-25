@@ -25,6 +25,7 @@ import ScrollUpBtn from "@components/ScrollUpBtn";
 import TodayAdditionalWeather from "@components/TodayAdditionalWeather";
 import TomorrowAdditionalWeather from "@components/TomorrowAdditionalWeather";
 import ForecastTenDays from "@components/ForecastTenDays";
+// import { useWeatherContext } from "@context/WeatherContext";
 
 type CurrentWeatherRouteProp = RouteProp<RootStackParamList, "CurrentWeather">;
 
@@ -45,7 +46,6 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   const [selectedWeather, setSelectedWeather] = useState<Weather>(
     Weather.Today
   );
-
   const [weather, setWeather] = useState<IForecastWeather | null>(null);
   const [tomorrowWeather, setTomorrowWeather] =
     useState<IForecastWeather | null>(null);
@@ -61,6 +61,10 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   // const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   const [paramCity, setParamCity] = useState("");
+
+  // const qwe = useWeatherContext()
+
+  // console.log('qwe', qwe)
 
   // console.log(
   //   "000000000000000000000000000000000000000000000000000000000000000000000000"

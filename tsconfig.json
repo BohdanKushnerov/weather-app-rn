@@ -10,7 +10,8 @@
       "@utils/*": ["./utils/*"],
       "@interfaces/*": ["./interfaces/*"],
       "@customEnums/*": ["customEnums/*"],
-      "@customTypes/*": ["./customTypes/*"]
+      "@customTypes/*": ["./customTypes/*"],
+      "@context/*": ["./context/*"]
     }
     // "paths": {
     //   "@/*": ["*"]
