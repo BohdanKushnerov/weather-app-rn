@@ -5,16 +5,19 @@ import { Fontisto } from "@expo/vector-icons";
 import { getFormattedDayName } from "@utils/getFormattedDayName";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { IForecastDay } from "@interfaces/IForecastDay";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 interface IForecastTenDaysProps {
   weather: IForecastWeather | null;
 }
 
 const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
+  const { weatherSettings } = useWeatherContext();
+
   return (
     <>
       {weather ? (
-        <View className="mb-2 space-y-3 z-30">
+        <View className="mb-2 space-y-3 z-30 pb-3">
           <View className="flex-row items-center px-[16px]">
             <View className="p-1 bg-white rounded-full">
               <Fontisto name="calendar" size={16} color="black" />
@@ -52,11 +55,17 @@ const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
                         <View className="flex-row">
                           <View className="flex flex-col items-center pr-1 border-r">
                             <Text className="font-[SoraBold] text-black text-xl">
-                              {item?.day?.maxtemp_c}&#176;
+                              {weatherSettings.temp === TemperatureUnit.Celsius
+                                ? item?.day?.maxtemp_c
+                                : item?.day?.maxtemp_f}
+                              {weatherSettings.temp}
                             </Text>
 
                             <Text className="font-[SoraBold] text-black text-xl">
-                              {item?.day?.mintemp_c}&#176;
+                              {weatherSettings.temp === TemperatureUnit.Celsius
+                                ? item?.day?.mintemp_c
+                                : item?.day?.mintemp_f}
+                              {weatherSettings.temp}
                             </Text>
                           </View>
 

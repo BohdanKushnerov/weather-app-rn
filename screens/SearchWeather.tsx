@@ -30,6 +30,7 @@ import LoaderComponent from "@components/LoaderComponent";
 import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 // type SearchWeatherRouteProp = RouteProp<RootStackParamList, "SearchWeather">;
 
@@ -51,7 +52,7 @@ interface ISearchHistory {
 
 const tempFn = async (city: string) => {
   const weather = await fetchCurrentForecast(city);
-  return weather.current.temp_c;
+  return { temp_c: weather.current.temp_c, temp_f: weather.current.temp_f };
 };
 
 const SearchWeather: FC<ISearchWeatherProps> = ({
@@ -71,10 +72,11 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setEdit] = useState(false);
 
-  const windowDimensions = useWindowDimensions();
   const insets = useSafeAreaInsets();
-
+  const windowDimensions = useWindowDimensions();
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
+
+  const { weatherSettings } = useWeatherContext();
 
   useEffect(() => {
     const showSubBtns = Keyboard.addListener("keyboardDidShow", () => {
@@ -125,8 +127,10 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
       } else {
         const fetchDataForSavedLocations = async () => {
           const weatherPromises = existingArray.map(async (city) => {
-            const temp: number = await tempFn(city.name);
-            return { ...city, temp_c: temp };
+            const temp: { temp_c: number; temp_f: number } = await tempFn(
+              city.name
+            );
+            return { ...city, ...temp };
           });
 
           const cityInfo = await Promise.all(weatherPromises);
@@ -272,7 +276,11 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
                   </View>
                 </View>
                 <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
-                  {myLocationWeather?.current.temp_c}&#176;
+                  {/* {myLocationWeather?.current.temp_c}&#176; */}
+                  {weatherSettings.temp === TemperatureUnit.Celsius
+                    ? myLocationWeather?.current.temp_c
+                    : myLocationWeather?.current.temp_f}{" "}
+                  {weatherSettings.temp}
                 </Text>
               </TouchableOpacity>
             ) : (
@@ -328,7 +336,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
                   return (
                     <View
                       className="flex-row justify-between bg-green-200 rounded-xl border border-green-400"
-                      key={(loc.name)}
+                      key={loc.name}
                     >
                       <TouchableOpacity
                         className={`${
@@ -356,7 +364,10 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
                           </View>
                         </View>
                         <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
-                          {loc.temp_c}&#176;
+                          {weatherSettings.temp === TemperatureUnit.Celsius
+                            ? loc.temp_c
+                            : loc.temp_f}{" "}
+                          {weatherSettings.temp}
                         </Text>
                       </TouchableOpacity>
 

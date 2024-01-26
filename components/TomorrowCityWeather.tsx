@@ -4,26 +4,19 @@ import { ActivityIndicator, Image, Text, View } from "react-native";
 import { getTime } from "@utils/getTime";
 import { formatDate } from "@utils/formatDate";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 interface ITomorrowCityWeatherProps {
   weather: IForecastWeather | null;
 }
 
 const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
+  const { weatherSettings } = useWeatherContext();
+
   return (
     <>
       {weather ? (
         <View className="flex flex-col justify-end h-full p-[16px]">
-          {/* <View>
-            <Text className="font-[SoraBold] text-white text-3xl">
-              {`${weather.location.name}, ${weather.location.country}`}
-            </Text>
-
-            <Text className="text-white text-base font-medium">
-              Last update weather: {getTime(weather.current.last_updated)}
-            </Text>
-          </View> */}
-
           <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
@@ -33,9 +26,13 @@ const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
 
                 <View className="flex-row">
                   <Text className="pt-[12px] font-[SoraBold] text-white text-8xl">
-                    {weather.forecast.forecastday[0].day.avgtemp_c}
+                    {weatherSettings.temp === TemperatureUnit.Celsius
+                      ? weather.forecast.forecastday[0].day.avgtemp_c
+                      : weather.forecast.forecastday[0].day.avgtemp_f}
                   </Text>
-                  <Text className="text-white text-7xl">&#176;</Text>
+                  <Text className="text-white text-7xl">
+                    {weatherSettings.temp}
+                  </Text>
                 </View>
               </View>
 
@@ -58,10 +55,18 @@ const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
               </Text>
               <View>
                 <Text className="font-[SoraSemiBold] text-white text-2xl">
-                  Day: {weather.forecast.forecastday[0].day.maxtemp_c}&#176;
+                  Day:{"  "}
+                  {weatherSettings.temp === TemperatureUnit.Celsius
+                    ? weather.forecast.forecastday[0].day.maxtemp_c
+                    : weather.forecast.forecastday[0].day.maxtemp_f}
+                  {weatherSettings.temp}
                 </Text>
                 <Text className="font-[SoraSemiBold] text-white text-2xl">
-                  Nigth: {weather.forecast.forecastday[0].day.mintemp_c}&#176;
+                  Nigth:{"  "}
+                  {weatherSettings.temp === TemperatureUnit.Celsius
+                    ? weather.forecast.forecastday[0].day.mintemp_c
+                    : weather.forecast.forecastday[0].day.mintemp_f}
+                  {weatherSettings.temp}
                 </Text>
               </View>
             </View>

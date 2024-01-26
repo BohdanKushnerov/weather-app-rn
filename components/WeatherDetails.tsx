@@ -7,12 +7,20 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { IForecastWeather } from "@interfaces/IForecastWeather";
+import {
+  DistanceUnit,
+  PressureUnit,
+  WindSpeedUnit,
+  useWeatherContext,
+} from "@context/WeatherContext";
 
 interface IWeatherDetailsProps {
   weather: IForecastWeather | null;
 }
 
 const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
+  const { weatherSettings } = useWeatherContext();
+
   return (
     <>
       {weather ? (
@@ -55,7 +63,10 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
                 Wind speed:
               </Text>
               <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-                {weather.current.wind_kph} k/h
+                {weatherSettings.windSpeed === WindSpeedUnit.KilometersPerHour
+                  ? weather.current.wind_kph
+                  : weather.current.wind_mph}{" "}
+                {weatherSettings.windSpeed}
               </Text>
             </View>
           </View>
@@ -69,7 +80,10 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
                 Pressure
               </Text>
               <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-                {weather.current.pressure_mb} mBar
+                {weatherSettings.pressure === PressureUnit.Millibar
+                  ? weather.current.pressure_mb
+                  : weather.current.pressure_in}{" "}
+                {weatherSettings.pressure}
               </Text>
             </View>
           </View>
@@ -98,7 +112,10 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
                 Visibility
               </Text>
               <Text className="font-[SoraMedium] text-base tracking-[0.25px] leading-5">
-                {weather.current.vis_km} km
+                {weatherSettings.distance === DistanceUnit.Kilometers
+                  ? weather.current.vis_km
+                  : weather.current.vis_miles}{" "}
+                {weatherSettings.distance}
               </Text>
             </View>
           </View>

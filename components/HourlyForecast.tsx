@@ -7,6 +7,7 @@ import { getTime } from "@utils/getTime";
 import { IWeatherHour } from "@interfaces/IWeatherHour";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 interface IHourlyForecastProps {
   weather: IForecastWeather | null;
@@ -17,6 +18,8 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
   weather,
   selectedWeather,
 }) => {
+  const { weatherSettings } = useWeatherContext();
+
   let filteredHours: IWeatherHour[] = [];
 
   if (selectedWeather === Weather.Today) {
@@ -59,7 +62,14 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
             </Text>
           </View>
 
-          <ScrollView horizontal>
+          <ScrollView
+            horizontal
+            contentContainerStyle={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 16,
+            }}
+          >
             {filteredHours.map((item, index) => {
               return (
                 <View
@@ -76,7 +86,11 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
                   />
 
                   <Text className="font-[SoraRegular] text-sm tracking-[0.25px] leading-5">
-                    {item.temp_c}&#176;
+                    {/* {item.temp_c}&#176; */}
+                    {weatherSettings.temp === TemperatureUnit.Celsius
+                      ? item.temp_c
+                      : item.temp_f}{" "}
+                    {weatherSettings.temp}
                   </Text>
                 </View>
               );

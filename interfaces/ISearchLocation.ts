@@ -6,5 +6,6 @@ export interface ISearchLocation {
   name: string;
   region: string;
   temp_c: number;
+  temp_f: number;
   // url: string;
 }
