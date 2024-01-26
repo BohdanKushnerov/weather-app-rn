@@ -1,4 +1,12 @@
-import { createContext, FC, ReactNode, useContext, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export enum Theme {
   Light = "light",
@@ -31,15 +39,26 @@ export enum WindSpeedUnit {
   MilesPerHour = "mhp",
 }
 
-export interface WeatherSettings {
-  weatherSettings: {
-    theme: Theme.Light | Theme.Dark;
-    lang: Language.English | Language.Ukrainian | Language.French;
-    temp: TemperatureUnit.Celsius | TemperatureUnit.Fahrenheit;
-    distance: DistanceUnit.Kilometers | DistanceUnit.Miles;
-    pressure: PressureUnit.Millibar | PressureUnit.InchOfMercury;
-    windSpeed: WindSpeedUnit.KilometersPerHour | WindSpeedUnit.MilesPerHour;
-  };
+export interface IWeatherSettings {
+  theme: Theme.Light | Theme.Dark;
+  lang: Language.English | Language.Ukrainian | Language.French;
+  temp: TemperatureUnit.Celsius | TemperatureUnit.Fahrenheit;
+  distance: DistanceUnit.Kilometers | DistanceUnit.Miles;
+  pressure: PressureUnit.Millibar | PressureUnit.InchOfMercury;
+  windSpeed: WindSpeedUnit.KilometersPerHour | WindSpeedUnit.MilesPerHour;
+}
+
+const contextInitialState = {
+  theme: Theme.Light,
+  lang: Language.English,
+  temp: TemperatureUnit.Celsius,
+  distance: DistanceUnit.Kilometers,
+  pressure: PressureUnit.Millibar,
+  windSpeed: WindSpeedUnit.KilometersPerHour,
+};
+
+export interface IWeatherContext {
+  weatherSettings: IWeatherSettings;
   setWeatherSettings: React.Dispatch<
     React.SetStateAction<{
       theme: Theme;
@@ -52,16 +71,7 @@ export interface WeatherSettings {
   >;
 }
 
-const contextInitialState = {
-  theme: Theme.Light,
-  lang: Language.English,
-  temp: TemperatureUnit.Celsius,
-  distance: DistanceUnit.Kilometers,
-  pressure: PressureUnit.Millibar,
-  windSpeed: WindSpeedUnit.KilometersPerHour,
-};
-
-const WeatherContext = createContext<WeatherSettings>({
+const WeatherContext = createContext<IWeatherContext>({
   weatherSettings: contextInitialState,
   setWeatherSettings: () => {},
 });
@@ -71,7 +81,39 @@ interface IWeatherContextProvider {
 }
 
 const WeatherContextProvider: FC<IWeatherContextProvider> = ({ children }) => {
-  const [weatherSettings, setWeatherSettings] = useState(contextInitialState);
+  const [weatherSettings, setWeatherSettings] =
+    useState<IWeatherSettings>(contextInitialState);
+
+  useEffect(() => {
+    const getWeatherStorageSettings = async () => {
+      console.log("fn1");
+
+      const storageWeatherSettings = await AsyncStorage.getItem(
+        "weatherSettings"
+      );
+
+      const existingObject: IWeatherSettings = storageWeatherSettings
+        ? JSON.parse(storageWeatherSettings)
+        : contextInitialState;
+
+      setWeatherSettings((prev) => ({
+        ...prev,
+        ...existingObject,
+      }));
+    };
+
+    getWeatherStorageSettings();
+  }, []);
+
+  useEffect(() => {
+    const saveToStorage = async () => {
+      console.log("fn2");
+      const jsonValue = JSON.stringify(weatherSettings);
+      await AsyncStorage.setItem("weatherSettings", jsonValue);
+    };
+
+    saveToStorage();
+  }, [weatherSettings]);
 
   return (
     <WeatherContext.Provider value={{ weatherSettings, setWeatherSettings }}>

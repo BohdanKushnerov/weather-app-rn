@@ -1,29 +1,17 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
 import { Switch } from "react-native-switch";
 import {
   DistanceUnit,
-  Language,
   PressureUnit,
   TemperatureUnit,
-  Theme,
-  WeatherSettings,
   WindSpeedUnit,
   useWeatherContext,
 } from "@context/WeatherContext";
 
 const SettingsWeather: FC = () => {
   const { weatherSettings, setWeatherSettings } = useWeatherContext();
-
-  // const [weatherSettings, setWeatherSettings] = useState<WeatherSettings>({
-  //   theme: Theme.Light,
-  //   lang: Language.English,
-  //   temp: TemperatureUnit.Celsius,
-  //   distance: DistanceUnit.Kilometers,
-  //   pressure: PressureUnit.Millibar,
-  //   windSpeed: WindSpeedUnit.KilometersPerHour,
-  // });
 
   console.log("weatherContext", weatherSettings);
   console.log("setWeatherSettings", setWeatherSettings);

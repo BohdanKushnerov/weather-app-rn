@@ -66,9 +66,9 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
 
   // console.log('qwe', qwe)
 
-  // console.log(
-  //   "000000000000000000000000000000000000000000000000000000000000000000000000"
-  // );
+  console.log(
+    "000000000000000000000000000000000000000000000000000000000000000000000000"
+  );
 
   useEffect(() => {
     if (params) {
