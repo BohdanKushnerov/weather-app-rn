@@ -271,15 +271,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   };
 
   return (
-    <View
-      className="relative bg-green-100"
-      style={
-        {
-          // marginTop: insets.top,
-          // marginBottom: insets.bottom,
-        }
-      }
-    >
+    <View className="relative bg-green-100">
       {/* goSearch + menu */}
       <HeaderCurrentWeather weather={weather} />
 

@@ -29,6 +29,8 @@ import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { ISearchLocation } from "@interfaces/ISearchLocation";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
+import MyLocationWeather from "@components/MyLocationWeather";
+import SavedLocations from "@components/SavedLocations";
 
 type SearchWeatherNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -50,9 +52,7 @@ const tempFn = async (city: string) => {
   return { temp_c: weather.current.temp_c, temp_f: weather.current.temp_f };
 };
 
-const SearchWeather: FC<ISearchWeatherProps> = ({
-  navigation,
-}) => {
+const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [myLocationWeather, setMyLocationWeather] =
     useState<IForecastWeather | null>(null);
@@ -64,13 +64,10 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
     ISearchLocation[] | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isEdit, setEdit] = useState(false);
 
   const insets = useSafeAreaInsets();
   const windowDimensions = useWindowDimensions();
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
-
-  const { weatherSettings } = useWeatherContext();
 
   useEffect(() => {
     const showSubBtns = Keyboard.addListener("keyboardDidShow", () => {
@@ -227,7 +224,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
           paddingBottom: 1,
         }}
       >
-        <View className="flex-1 relative ">
+        <View className="flex-1 relative">
           <CityInput
             isLoading={isLoading}
             city={city}
@@ -240,154 +237,13 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
             />
           ) : null}
 
-          <View className="flex-col items-center">
-            <View className="flex-row items-center gap-x-2 p-2">
-              <Entypo name="home" size={24} color="black" />
-              <Text className="font-[SoraBold] text-base tracking-[0.25px] leading-5">
-                Current location weather
-              </Text>
-            </View>
-            {myLocationWeather ? (
-              <TouchableOpacity
-                className="w-full flex-row justify-between items-center py-2 px-4 bg-gray-300 rounded-md border"
-                onPress={() =>
-                  navigation.navigate("CurrentWeather", {
-                    cityName: myLocationWeather?.location.name,
-                  })
-                }
-              >
-                <View className="flex-col">
-                  <Text className="font-[SoraSemiBold] text-base tracking-[0.25px] leading-5">
-                    {myLocationWeather?.location.name}
-                  </Text>
-                  <View className="flex-row">
-                    <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
-                      {myLocationWeather?.location.region},
-                    </Text>
-                    <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
-                      {myLocationWeather?.location.country}
-                    </Text>
-                  </View>
-                </View>
-                <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
-                  {/* {myLocationWeather?.current.temp_c}&#176; */}
-                  {weatherSettings.temp === TemperatureUnit.Celsius
-                    ? myLocationWeather?.current.temp_c
-                    : myLocationWeather?.current.temp_f}{" "}
-                  {weatherSettings.temp}
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <View className="h-[50px]">
-                <LoaderComponent />
-              </View>
-            )}
-          </View>
+          <MyLocationWeather myLocationWeather={myLocationWeather} />
 
-          {savedLocations ? (
-            <View className="relative flex-1 flex-col items-center">
-              <View className="flex-row items-center gap-x-2 p-2">
-                <FontAwesome name="history" size={24} color="black" />
-                <Text className="font-[SoraBold] text-lg tracking-[0.25px] leading-5">
-                  History locations
-                </Text>
-              </View>
-              {savedLocations.length > 0 && (
-                <TouchableOpacity
-                  className={`absolute top-1 right-0 py-2 px-4 flex-row gap-x-1 border rounded-md ${
-                    isEdit && "border-red-500"
-                  }`}
-                  onPress={() => {
-                    setEdit((prev) => !prev);
-                    keyboardHide();
-                  }}
-                >
-                  <Entypo
-                    name="edit"
-                    size={16}
-                    color={isEdit ? "red" : "black"}
-                  />
-                  <Text
-                    className={`font-[SoraSemiBold] text-base tracking-[0.25px] leading-5 ${
-                      isEdit && "text-red-500 border-red-500"
-                    }`}
-                  >
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-              )}
-
-              <ScrollView
-                style={{ width: dimensionsWidth, height: 300, flexGrow: 1 }}
-                contentContainerStyle={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                  paddingHorizontal: 8,
-                }}
-              >
-                {savedLocations?.map((loc) => {
-                  return (
-                    <View
-                      className="flex-row justify-between bg-green-200 rounded-xl border border-green-400"
-                      key={loc.name}
-                    >
-                      <TouchableOpacity
-                        className={`${
-                          // "w-full"
-                          isEdit ? "w-[85%]" : "w-full"
-                        } flex-row justify-between items-center py-2 px-4`}
-                        onPress={() => {
-                          keyboardHide();
-                          navigation.navigate("CurrentWeather", {
-                            cityName: loc.name,
-                          });
-                        }}
-                        // disabled={isEdit}
-                      >
-                        <View className="flex-col">
-                          <Text className="font-[SoraSemiBold] text-base tracking-[0.25px] leading-5">
-                            {loc.name}
-                          </Text>
-                          <View className="flex-row">
-                            <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
-                              {loc.region},
-                            </Text>
-                            <Text className="font-[SoraRegular] text-base tracking-[0.25px] leading-5">
-                              {loc.country}
-                            </Text>
-                          </View>
-                        </View>
-                        <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
-                          {weatherSettings.temp === TemperatureUnit.Celsius
-                            ? loc.temp_c
-                            : loc.temp_f}{" "}
-                          {weatherSettings.temp}
-                        </Text>
-                      </TouchableOpacity>
-
-                      {isEdit && (
-                        <TouchableOpacity
-                          className={`w-[15%] flex justify-center items-center py-2 rounded-md border ${
-                            isEdit && "bg-red-50 border-red-500"
-                          }`}
-                          onPress={() =>
-                            handleDeleteCityFromStorage(loc.name, loc.region)
-                          }
-                        >
-                          <AntDesign name="delete" size={24} color="red" />
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  );
-                })}
-              </ScrollView>
-            </View>
-          ) : (
-            <View className="h-[100px]">
-              <LoaderComponent />
-            </View>
-          )}
+          <SavedLocations
+            savedLocations={savedLocations}
+            keyboardHide={keyboardHide}
+            handleDeleteCityFromStorage={handleDeleteCityFromStorage}
+          />
         </View>
 
         <StatusBar style="dark" />

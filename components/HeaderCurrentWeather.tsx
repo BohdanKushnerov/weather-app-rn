@@ -23,9 +23,8 @@ const HeaderCurrentWeather: FC<IHeaderCurrentWeatherProps> = ({ weather }) => {
       className={`w-full p-2 z-10 flex flex-row items-center justify-between bg-gray-700/50 rounded-3xl`}
       style={{
         position: "absolute",
-        top: insets.top,
-        // top: 0,
         right: 0,
+        top: insets.top,
       }}
     >
       {weather ? (

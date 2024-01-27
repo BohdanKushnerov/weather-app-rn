@@ -20,7 +20,7 @@ const WeatherMainInfoWithBackground: FC<
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
   return (
     <ImageBackground
-      source={require("../assets/valentin-muller-bWtd1ZyEy6w-unsplash.jpg")}
+      source={require("@assets/valentin-muller-bWtd1ZyEy6w-unsplash.jpg")}
       resizeMode="cover"
       style={{
         paddingTop: "5%",
