@@ -6,7 +6,6 @@ import {
   View,
 } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
-import { debounce } from "lodash";
 
 interface ICityInputProps {
   isLoading: boolean;

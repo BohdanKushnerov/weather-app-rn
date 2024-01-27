@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
-import { formatDate } from "../utils/formatDate";
-import { IForecastWeather } from "../interfaces/IForecastWeather";
 import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { formatDate } from "@utils/formatDate";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 
 interface ILocationCityWeatherInfoProps {
   weather: IForecastWeather | null;

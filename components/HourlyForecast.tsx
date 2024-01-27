@@ -3,11 +3,11 @@ import { Image, ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import LoaderComponent from "./LoaderComponent";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 import { getTime } from "@utils/getTime";
 import { IWeatherHour } from "@interfaces/IWeatherHour";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 interface IHourlyForecastProps {
   weather: IForecastWeather | null;
@@ -47,8 +47,6 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
     filteredHours = weather?.forecast?.forecastday[0].hour || [];
   }
 
-  // console.log("filteredHours", filteredHours);
-
   return (
     <>
       {weather ? (
@@ -86,7 +84,6 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
                   />
 
                   <Text className="font-[SoraRegular] text-sm tracking-[0.25px] leading-5">
-                    {/* {item.temp_c}&#176; */}
                     {weatherSettings.temp === TemperatureUnit.Celsius
                       ? item.temp_c
                       : item.temp_f}{" "}

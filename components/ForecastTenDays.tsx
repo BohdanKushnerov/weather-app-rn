@@ -2,10 +2,10 @@ import { FC } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 import { getFormattedDayName } from "@utils/getFormattedDayName";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { IForecastDay } from "@interfaces/IForecastDay";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 
 interface IForecastTenDaysProps {
   weather: IForecastWeather | null;

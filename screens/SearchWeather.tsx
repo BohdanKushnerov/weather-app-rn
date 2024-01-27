@@ -8,31 +8,27 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-// import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-// import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CityInput from "@components/CityInput";
 import CitiesList from "@components/CitiesList";
+import LoaderComponent from "@components/LoaderComponent";
 import {
   fetchCurrentForecast,
   fetchCurrentForecastLocation,
   fetchLocations,
 } from "@api/weather";
+import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { ISearchLocation } from "@interfaces/ISearchLocation";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
-import LoaderComponent from "@components/LoaderComponent";
-import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
-
-// type SearchWeatherRouteProp = RouteProp<RootStackParamList, "SearchWeather">;
 
 type SearchWeatherNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -40,7 +36,6 @@ type SearchWeatherNavigationProp = StackNavigationProp<
 >;
 
 interface ISearchWeatherProps {
-  // route: SearchWeatherRouteProp;
   navigation: SearchWeatherNavigationProp;
 }
 
@@ -56,7 +51,6 @@ const tempFn = async (city: string) => {
 };
 
 const SearchWeather: FC<ISearchWeatherProps> = ({
-  // route: { params },
   navigation,
 }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -343,11 +337,12 @@ const SearchWeather: FC<ISearchWeatherProps> = ({
                           // "w-full"
                           isEdit ? "w-[85%]" : "w-full"
                         } flex-row justify-between items-center py-2 px-4`}
-                        onPress={() =>
+                        onPress={() => {
+                          keyboardHide();
                           navigation.navigate("CurrentWeather", {
                             cityName: loc.name,
-                          })
-                        }
+                          });
+                        }}
                         // disabled={isEdit}
                       >
                         <View className="flex-col">

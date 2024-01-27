@@ -1,12 +1,13 @@
-import { getTime } from "@utils/getTime";
 import React, { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import LoaderComponent from "./LoaderComponent";
-import { Entypo, Fontisto } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Entypo, Fontisto } from "@expo/vector-icons";
+
+import LoaderComponent from "./LoaderComponent";
+import { getTime } from "@utils/getTime";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
 
 interface IHeaderCurrentWeatherProps {

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
 import { Switch } from "react-native-switch";
+
 import {
   DistanceUnit,
   PressureUnit,

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -12,20 +12,18 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 
 import SelectWeatherButtons from "@components/SelectWeatherButtons";
-
-import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
-import { getCurrentLocation } from "@utils/getCurrentLocation";
-import { IForecastDay } from "@interfaces/IForecastDay";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
-import { RootStackParamList } from "@customTypes/RootStackParamList";
-import { Weather } from "@customEnums/Weather";
 import HeaderCurrentWeather from "@components/HeaderCurrentWeather";
 import WeatherMainInfoWithBackground from "@components/WeatherMainInfoWithBackground";
 import ScrollUpBtn from "@components/ScrollUpBtn";
 import TodayAdditionalWeather from "@components/TodayAdditionalWeather";
 import TomorrowAdditionalWeather from "@components/TomorrowAdditionalWeather";
 import ForecastTenDays from "@components/ForecastTenDays";
-// import { useWeatherContext } from "@context/WeatherContext";
+import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
+import { getCurrentLocation } from "@utils/getCurrentLocation";
+import { IForecastDay } from "@interfaces/IForecastDay";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { RootStackParamList } from "@customTypes/RootStackParamList";
+import { Weather } from "@customEnums/Weather";
 
 type CurrentWeatherRouteProp = RouteProp<RootStackParamList, "CurrentWeather">;
 

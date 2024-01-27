@@ -6,13 +6,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { IForecastWeather } from "@interfaces/IForecastWeather";
 import {
   DistanceUnit,
   PressureUnit,
   WindSpeedUnit,
   useWeatherContext,
 } from "@context/WeatherContext";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 
 interface IWeatherDetailsProps {
   weather: IForecastWeather | null;

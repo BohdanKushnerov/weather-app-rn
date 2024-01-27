@@ -1,9 +1,10 @@
 import React, { FC } from "react";
 import { ImageBackground, View, useWindowDimensions } from "react-native";
+
 import TomorrowCityWeather from "./TomorrowCityWeather";
-import { Weather } from "@customEnums/Weather";
 import LocationCityWeatherInfo from "./LocationCityWeatherInfo";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { Weather } from "@customEnums/Weather";
 
 interface IWeatherMainInfoWithBackgroundProps {
   weather: IForecastWeather | null;

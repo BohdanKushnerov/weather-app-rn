@@ -96,10 +96,7 @@ const WeatherContextProvider: FC<IWeatherContextProvider> = ({ children }) => {
         ? JSON.parse(storageWeatherSettings)
         : contextInitialState;
 
-      setWeatherSettings((prev) => ({
-        ...prev,
-        ...existingObject,
-      }));
+      setWeatherSettings(existingObject);
     };
 
     getWeatherStorageSettings();

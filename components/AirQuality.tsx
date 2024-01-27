@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 import { IAirQualityProps } from "@interfaces/IAirQualityProps";
-import AirQualityTable from "./AirQualityTable";
 
 const getAirQualityInfo = (airQuality: number) => {
   let bgColor, status;
@@ -40,29 +39,6 @@ const getAirQualityInfo = (airQuality: number) => {
 
   return { bgColor, status };
 };
-
-// type DefraTable = {
-//   [key: number]: { band: string; microGram: string };
-// };
-
-// const getDefraValues = (
-//   gbDefraIndex: number
-// ): { band: string; microGram: string } | null => {
-//   const defraTable: DefraTable = {
-//     1: { band: "Low", microGram: "0-11" },
-//     2: { band: "Low", microGram: "12-23" },
-//     3: { band: "Low", microGram: "24-35" },
-//     4: { band: "Moderate", microGram: "36-41" },
-//     5: { band: "Moderate", microGram: "42-47" },
-//     6: { band: "Moderate", microGram: "48-53" },
-//     7: { band: "High", microGram: "54-58" },
-//     8: { band: "High", microGram: "59-64" },
-//     9: { band: "High", microGram: "65-70" },
-//     10: { band: "Very High", microGram: "71 or more" },
-//   };
-
-//   return defraTable[gbDefraIndex];
-// };
 
 const formattedNumber = (num: number) => {
   return Number.isInteger(num) ? num.toString() : num.toFixed(2);
@@ -146,16 +122,6 @@ const AirQuality: FC<IAirQualityProps> = ({ airQuality }) => {
             {airQuality["us-epa-index"]}
           </Text>
         </View>
-        {/* <View className="flex-row justify-center items-center gap-x-2">
-          <Text className="font-[SoraMedium] text-lg tracking-[0.25px] leading-5">
-            UK Defra Index (See table below):
-          </Text>
-          <Text className="font-[SoraBold] text-lg tracking-[0.25px] leading-5">
-            {airQuality["gb-defra-index"]}
-          </Text>
-        </View> */}
-
-        {/* <AirQualityTable /> */}
       </View>
     </View>
 

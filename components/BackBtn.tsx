@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TouchableOpacity } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { AntDesign } from "@expo/vector-icons";
 
 type RootStackParamList = {
   SearchWeather: { cityName: string };

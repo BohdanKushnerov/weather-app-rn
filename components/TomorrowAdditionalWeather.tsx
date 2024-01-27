@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { View } from "react-native";
+
 import WeatherDetails from "./WeatherDetails";
 import HourlyForecast from "./HourlyForecast";
 import AirQuality from "./AirQuality";
