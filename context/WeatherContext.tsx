@@ -5,6 +5,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -84,6 +85,14 @@ const WeatherContextProvider: FC<IWeatherContextProvider> = ({ children }) => {
   const [weatherSettings, setWeatherSettings] =
     useState<IWeatherSettings>(contextInitialState);
 
+  const memoizedWeatherValues = useMemo(
+    () => ({
+      weatherSettings,
+      setWeatherSettings,
+    }),
+    [weatherSettings]
+  );
+
   useEffect(() => {
     const getWeatherStorageSettings = async () => {
       console.log("fn1");
@@ -113,7 +122,7 @@ const WeatherContextProvider: FC<IWeatherContextProvider> = ({ children }) => {
   }, [weatherSettings]);
 
   return (
-    <WeatherContext.Provider value={{ weatherSettings, setWeatherSettings }}>
+    <WeatherContext.Provider value={memoizedWeatherValues}>
       {children}
     </WeatherContext.Provider>
   );

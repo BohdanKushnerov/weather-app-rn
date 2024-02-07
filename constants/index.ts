@@ -13,4 +13,5 @@ export const endpoints = {
   ipLookup: "ip.json",
 };
 
-export const apiKey = "d5f39f23c343479082390247241601";
+// export const apiKey = "d5f39f23c343479082390247241601"; // bgc
+export const apiKey = "11f3599d1aef4d0bbc7114009240702"; // nem

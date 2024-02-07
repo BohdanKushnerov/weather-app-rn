@@ -64,10 +64,6 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
 
   // console.log('qwe', qwe)
 
-  console.log(
-    "000000000000000000000000000000000000000000000000000000000000000000000000"
-  );
-
   useEffect(() => {
     if (params) {
       setParamCity(params?.cityName);
@@ -78,6 +74,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
     setRefreshing(true);
 
     scrollToTop();
+    // setWeather(null);
     setTomorrowWeather(null);
     setTenDaysWeather(null);
 
@@ -140,9 +137,9 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   // if (location) current weather in current location
   useEffect(() => {
     if (location && selectedWeather === Weather.Today && !refreshing) {
-      console.log(
-        "==========================================11111111111111111111111"
-      );
+      // console.log(
+      //   "==========================================11111111111111111111111"
+      // );
       const { latitude, longitude } = location.coords;
 
       fetchWeatherCurrent({ latitude, longitude, days: 1 }).then((data) => {
@@ -154,7 +151,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   // params.cityName && "Today"
   useEffect(() => {
     if (params === undefined) return;
-    console.log("======================================22222222222222222222");
+    // console.log("======================================22222222222222222222");
 
     if (params.cityName && !refreshing) {
       resetWeather();
