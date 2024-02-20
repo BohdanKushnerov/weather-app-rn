@@ -10,6 +10,7 @@ import {
   WindSpeedUnit,
   useWeatherContext,
 } from "@context/WeatherContext";
+import SettingsSwitcher from "@components/SettingsSwitcher";
 
 const SettingsWeather: FC = () => {
   const { weatherSettings, setWeatherSettings } = useWeatherContext();
@@ -58,63 +59,39 @@ const SettingsWeather: FC = () => {
   };
 
   return (
-    <View className="bg-red-300">
-      <View className="flex-col gap-y-2 px-5 py-2">
-        <View className="flex-row justify-between items-center">
-          <Text>Temperature</Text>
-          <Switch
-            value={weatherSettings.temp === TemperatureUnit.Celsius}
-            onValueChange={handleChangeTempValue}
-            // disabled={false}
-            activeText={TemperatureUnit.Celsius}
-            inActiveText={TemperatureUnit.Fahrenheit}
-            backgroundActive={"green"}
-            backgroundInactive={"gray"}
-            circleActiveColor={"#30a566"}
-            circleInActiveColor={"#000000"}
-          />
-        </View>
-        <View className="flex-row justify-between items-center">
-          <Text>Distance</Text>
-          <Switch
-            value={weatherSettings.distance === DistanceUnit.Kilometers}
-            onValueChange={handleChangeDistanceValue}
-            activeText={DistanceUnit.Kilometers}
-            inActiveText={DistanceUnit.Miles}
-            backgroundActive={"green"}
-            backgroundInactive={"gray"}
-            circleActiveColor={"#30a566"}
-            circleInActiveColor={"#000000"}
-          />
-        </View>
-        <View className="flex-row justify-between items-center">
-          <Text>Pressure</Text>
-          <Switch
-            value={weatherSettings.pressure === PressureUnit.Millibar}
-            onValueChange={handleChangePressureValue}
-            activeText={PressureUnit.Millibar}
-            inActiveText={PressureUnit.InchOfMercury}
-            backgroundActive={"green"}
-            backgroundInactive={"gray"}
-            circleActiveColor={"#30a566"}
-            circleInActiveColor={"#000000"}
-          />
-        </View>
-        <View className="flex-row justify-between items-center">
-          <Text>Wind Speed</Text>
-          <Switch
-            value={
-              weatherSettings.windSpeed === WindSpeedUnit.KilometersPerHour
-            }
-            onValueChange={handleChangeWindSpeedValue}
-            activeText={WindSpeedUnit.KilometersPerHour}
-            inActiveText={WindSpeedUnit.MilesPerHour}
-            backgroundActive={"green"}
-            backgroundInactive={"gray"}
-            circleActiveColor={"#30a566"}
-            circleInActiveColor={"#000000"}
-          />
-        </View>
+    <View className="bg-green-100 h-screen">
+      <View className="flex-col p-2">
+        <SettingsSwitcher
+          name="Temperature"
+          value={weatherSettings.temp === TemperatureUnit.Celsius}
+          handleChange={handleChangeTempValue}
+          activeText={TemperatureUnit.Celsius}
+          inActiveText={TemperatureUnit.Fahrenheit}
+        />
+
+        <SettingsSwitcher
+          name="Distance"
+          value={weatherSettings.distance === DistanceUnit.Kilometers}
+          handleChange={handleChangeDistanceValue}
+          activeText={DistanceUnit.Kilometers}
+          inActiveText={DistanceUnit.Miles}
+        />
+
+        <SettingsSwitcher
+          name="Pressure"
+          value={weatherSettings.pressure === PressureUnit.Millibar}
+          handleChange={handleChangePressureValue}
+          activeText={PressureUnit.Millibar}
+          inActiveText={PressureUnit.InchOfMercury}
+        />
+
+        <SettingsSwitcher
+          name="Wind Speed"
+          value={weatherSettings.windSpeed === WindSpeedUnit.KilometersPerHour}
+          handleChange={handleChangeWindSpeedValue}
+          activeText={WindSpeedUnit.KilometersPerHour}
+          inActiveText={WindSpeedUnit.MilesPerHour}
+        />
       </View>
       <StatusBar style="dark" />
     </View>

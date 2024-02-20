@@ -21,7 +21,7 @@ interface ISavedLocations {
   handleDeleteCityFromStorage: (name: string, region: string) => Promise<void>;
 }
 
-const SavedLocations: FC<ISavedLocations> = ({
+const SavedSearchLocations: FC<ISavedLocations> = ({
   savedLocations,
   keyboardHide,
   handleDeleteCityFromStorage,
@@ -141,4 +141,4 @@ const SavedLocations: FC<ISavedLocations> = ({
   );
 };
 
-export default SavedLocations;
+export default SavedSearchLocations;

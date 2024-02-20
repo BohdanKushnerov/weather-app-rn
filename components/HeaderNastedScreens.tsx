@@ -22,6 +22,7 @@ const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
 
   return (
     <View
+      className="bg-green-200"
       style={{
         paddingTop: insets.top,
       }}

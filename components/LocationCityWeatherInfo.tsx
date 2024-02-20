@@ -17,7 +17,7 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
   return (
     <>
       {weather ? (
-        <View className="flex flex-col justify-end h-full p-[16px]">
+        <View className="flex flex-col justify-end h-full p-[16px] bg-gray-700/20">
           <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">

@@ -1,9 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import {
   Keyboard,
-  ScrollView,
-  Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
@@ -11,26 +8,21 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CityInput from "@components/CityInput";
 import CitiesList from "@components/CitiesList";
-import LoaderComponent from "@components/LoaderComponent";
+import MyLocationWeather from "@components/MyLocationWeather";
+import SavedLocations from "@components/SavedSearchLocations";
 import {
   fetchCurrentForecast,
   fetchCurrentForecastLocation,
   fetchLocations,
 } from "@api/weather";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { ISearchLocation } from "@interfaces/ISearchLocation";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
-import MyLocationWeather from "@components/MyLocationWeather";
-import SavedLocations from "@components/SavedLocations";
 
 type SearchWeatherNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -208,7 +200,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
   };
 
   const keyboardHide = () => {
-    setIsShowKeyboard(false);
+    // setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
@@ -220,8 +212,8 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
           height: dimensionsHeigth - 64 - insets.top,
           width: dimensionsWidth,
           paddingHorizontal: 8,
-          paddingTop: 1,
-          paddingBottom: 1,
+          paddingTop: 8,
+          // paddingBottom: 8,
         }}
       >
         <View className="flex-1 relative">
