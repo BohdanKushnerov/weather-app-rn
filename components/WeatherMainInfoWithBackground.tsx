@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { ImageBackground, View, useWindowDimensions } from "react-native";
 
-import TomorrowCityWeather from "./TomorrowCityWeather";
-import LocationCityWeatherInfo from "./LocationCityWeatherInfo";
+import TomorrowWeatherMainInfo from "./TomorrowWeatherMainInfo";
+import TodayWeatherMainInfo from "./TodayWeatherMainInfo";
 import { getWeatherNameBcg } from "@utils/getWeatherNameBcg";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
@@ -88,11 +88,11 @@ const WeatherMainInfoWithBackground: FC<
           <View className="relative rounded-3xl">
             {(selectedWeather === Weather.Today ||
               selectedWeather === Weather.TenDays) && (
-              <LocationCityWeatherInfo weather={weather} />
+              <TodayWeatherMainInfo weather={weather} />
             )}
 
             {selectedWeather === "Tomorrow" && (
-              <TomorrowCityWeather weather={tomorrowWeather} />
+              <TomorrowWeatherMainInfo weather={tomorrowWeather} />
             )}
           </View>
         </ImageBackground>

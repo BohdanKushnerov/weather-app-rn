@@ -5,56 +5,52 @@ import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
 import { formatDate } from "@utils/formatDate";
 import { IForecastWeather } from "@interfaces/IForecastWeather";
 
-interface ILocationCityWeatherInfoProps {
+interface ITomorrowWeatherMainInfoProps {
   weather: IForecastWeather | null;
 }
 
-const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
-  weather,
-}) => {
+const TomorrowWeatherMainInfo: FC<ITomorrowWeatherMainInfoProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();
 
   return (
     <>
       {weather ? (
-        <View className="flex flex-col justify-end h-full p-[16px] bg-gray-700/20">
+        <View className="flex flex-col justify-end h-full p-[16px]">
           <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
+                <Text className="max-w-[150px] font-[SoraSemiBold] text-center text-white text-2xl">
+                  Average temperature:
+                </Text>
+
                 <View className="flex-row">
                   <Text className="pt-[12px] font-[SoraBold] text-white text-8xl">
                     {weatherSettings.temp === TemperatureUnit.Celsius
-                      ? weather.current.temp_c
-                      : weather.current.temp_f}
+                      ? weather.forecast.forecastday[0].day.avgtemp_c
+                      : weather.forecast.forecastday[0].day.avgtemp_f}
                   </Text>
                   <Text className="text-white text-7xl">
                     {weatherSettings.temp}
                   </Text>
                 </View>
-
-                <Text className="font-[SoraSemiBold] text-2xl text-white">
-                  Feels like:{"  "}
-                  {weatherSettings.temp === TemperatureUnit.Celsius
-                    ? weather.current.feelslike_c
-                    : weather.current.feelslike_f}
-                  {weatherSettings.temp}
-                </Text>
               </View>
 
               <View className="max-w-[150px] flex-col items-center">
                 <Image
                   className="w-[128px] h-[128px]"
-                  source={{ uri: `https:${weather.current.condition.icon}` }}
+                  source={{
+                    uri: `https:${weather.forecast.forecastday[0].day.condition.icon}`,
+                  }}
                 />
-                <Text className="font-[SoraSemiBold] text-white text-2xl">
-                  {weather.current.condition.text}
+                <Text className="font-[SoraSemiBold] text-center text-white text-2xl">
+                  {weather.forecast.forecastday[0].day.condition.text}
                 </Text>
               </View>
             </View>
 
             <View className="flex-row justify-between items-end">
               <Text className="font-[SoraMedium] text-white text-xl">
-                {formatDate(weather.location.localtime)}
+                {formatDate(weather.forecast.forecastday[0].date)}
               </Text>
               <View>
                 <Text className="font-[SoraSemiBold] text-white text-2xl">
@@ -84,4 +80,4 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
   );
 };
 
-export default LocationCityWeatherInfo;
+export default TomorrowWeatherMainInfo;

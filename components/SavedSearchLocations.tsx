@@ -51,8 +51,8 @@ const SavedSearchLocations: FC<ISavedLocations> = ({
                 isEdit && "border-red-500"
               }`}
               onPress={() => {
-                setEdit((prev) => !prev);
                 keyboardHide();
+                setEdit((prev) => !prev);
               }}
             >
               <Entypo name="edit" size={16} color={isEdit ? "red" : "black"} />

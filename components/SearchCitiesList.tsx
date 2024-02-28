@@ -4,12 +4,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { ISearchLocation } from "@interfaces/ISearchLocation";
 
-interface ICitiesListProps {
+interface ISearchCitiesListProps {
   searchLocations: ISearchLocation[];
   handleClickLocation: (location: ISearchLocation) => void;
 }
 
-const CitiesList: FC<ICitiesListProps> = ({
+const SearchCitiesList: FC<ISearchCitiesListProps> = ({
   searchLocations,
   handleClickLocation,
 }) => {
@@ -44,4 +44,4 @@ const CitiesList: FC<ICitiesListProps> = ({
   );
 };
 
-export default CitiesList;
+export default SearchCitiesList;
