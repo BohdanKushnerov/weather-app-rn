@@ -1,16 +1,13 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
-import { Switch } from "react-native-switch";
+import { View } from "react-native";
 
-import {
-  DistanceUnit,
-  PressureUnit,
-  TemperatureUnit,
-  WindSpeedUnit,
-  useWeatherContext,
-} from "@context/WeatherContext";
 import SettingsSwitcher from "@components/SettingsSwitcher";
+import { useWeatherContext } from "@context/WeatherContext";
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
+import { DistanceUnit } from "@customEnums/DistanceUnit";
+import { PressureUnit } from "@customEnums/PressureUnit";
+import { WindSpeedUnit } from "@customEnums/WindSpeedUnit";
 
 const SettingsWeather: FC = () => {
   const { weatherSettings, setWeatherSettings } = useWeatherContext();
@@ -59,7 +56,7 @@ const SettingsWeather: FC = () => {
   };
 
   return (
-    <View className="bg-green-100 h-screen">
+    <View className="bg-mainBcg h-screen">
       <View className="flex-col p-2">
         <SettingsSwitcher
           name="Temperature"

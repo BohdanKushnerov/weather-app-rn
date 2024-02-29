@@ -54,7 +54,7 @@ const App: FC = () => {
                 header: () => (
                   <HeaderNastedScreens
                     navigation={navigation}
-                    title="SearchWeather"
+                    title="Search Weather"
                   />
                 ),
               })}
@@ -68,7 +68,7 @@ const App: FC = () => {
                 header: () => (
                   <HeaderNastedScreens
                     navigation={navigation}
-                    title="SettingsWeather"
+                    title="Settings Weather"
                   />
                 ),
               })}

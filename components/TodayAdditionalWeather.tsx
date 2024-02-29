@@ -5,13 +5,7 @@ import WeatherDetails from "./WeatherDetails";
 import HourlyForecast from "./HourlyForecast";
 import AirQuality from "./AirQuality";
 import LoaderComponent from "./LoaderComponent";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
-import { Weather } from "@customEnums/Weather";
-
-interface ITodayAdditionalWeatherProps {
-  weather: IForecastWeather | null;
-  selectedWeather: Weather;
-}
+import { ITodayAdditionalWeatherProps } from "@interfaces/ITodayAdditionalWeatherProps";
 
 const TodayAdditionalWeather: FC<ITodayAdditionalWeatherProps> = ({
   weather,

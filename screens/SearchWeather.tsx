@@ -191,7 +191,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View
-        className="bg-green-100"
+        className="bg-mainBcg"
         style={{
           height: dimensionsHeigth - 64 - insets.top,
           width: dimensionsWidth,

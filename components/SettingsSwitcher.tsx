@@ -1,14 +1,8 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Text, View } from "react-native";
 import { Switch } from "react-native-switch";
 
-interface ISettingsSwitchProps {
-  name: string;
-  value: boolean;
-  handleChange: () => void;
-  activeText: string;
-  inActiveText: string;
-}
+import { ISettingsSwitchProps } from "@interfaces/ISettingsSwitchProps";
 
 const SettingsSwitcher: FC<ISettingsSwitchProps> = ({
   name,
@@ -18,7 +12,7 @@ const SettingsSwitcher: FC<ISettingsSwitchProps> = ({
   inActiveText,
 }) => {
   return (
-    <View className="flex-row justify-between items-center mb-2 bg-slate-100/30 rounded-xl">
+    <View className="flex-row justify-between items-center mb-2 rounded-xl">
       <Text className="font-[SoraMedium] text-base tracking-[0.25px]">
         {name}
       </Text>

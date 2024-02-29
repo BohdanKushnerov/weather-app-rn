@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -6,17 +6,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-import {
-  DistanceUnit,
-  PressureUnit,
-  WindSpeedUnit,
-  useWeatherContext,
-} from "@context/WeatherContext";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
-
-interface IWeatherDetailsProps {
-  weather: IForecastWeather | null;
-}
+import { useWeatherContext } from "@context/WeatherContext";
+import { IWeatherDetailsProps } from "@interfaces/IWeatherDetailsProps";
+import { WindSpeedUnit } from "@customEnums/WindSpeedUnit";
+import { PressureUnit } from "@customEnums/PressureUnit";
+import { DistanceUnit } from "@customEnums/DistanceUnit";
 
 const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();
@@ -26,7 +20,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
       {weather ? (
         <View className="flex flex-row flex-wrap gap-2 justify-center px-[16px]">
           {/* Rain */}
-          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <Ionicons name="rainy-outline" size={24} color="black" />
             </View>
@@ -40,7 +34,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
             </View>
           </View>
           {/* Snow */}
-          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <FontAwesome name="snowflake-o" size={24} color="black" />
             </View>
@@ -54,7 +48,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
             </View>
           </View>
           {/* Wind */}
-          <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <Feather name="wind" size={24} color="black" />
             </View>
@@ -71,7 +65,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
             </View>
           </View>
           {/* Pressure */}
-          <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row  gap-x-2  items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <MaterialCommunityIcons name="gauge" size={24} color="black" />
             </View>
@@ -88,7 +82,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
             </View>
           </View>
           {/* UV Index */}
-          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <Feather name="sun" size={24} color="black" />
             </View>
@@ -103,7 +97,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
           </View>
 
           {/* Visibility */}
-          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <MaterialIcons name="visibility" size={24} color="black" />
             </View>
@@ -120,7 +114,7 @@ const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
             </View>
           </View>
           {/* Humidity */}
-          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-green-200">
+          <View className="flex-row gap-x-2 items-center h-[65px] p-[10px] rounded-xl bg-secondaryBcg">
             <View className="p-1 bg-white rounded-full">
               <MaterialCommunityIcons
                 name="air-humidifier"

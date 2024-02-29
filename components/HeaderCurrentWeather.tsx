@@ -7,12 +7,8 @@ import { Entypo, Fontisto } from "@expo/vector-icons";
 
 import LoaderComponent from "./LoaderComponent";
 import { getTime } from "@utils/getTime";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { IHeaderCurrentWeatherProps } from "@interfaces/IHeaderCurrentWeatherProps";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
-
-interface IHeaderCurrentWeatherProps {
-  weather: IForecastWeather | null;
-}
 
 const HeaderCurrentWeather: FC<IHeaderCurrentWeatherProps> = ({ weather }) => {
   const insets = useSafeAreaInsets();
@@ -20,7 +16,7 @@ const HeaderCurrentWeather: FC<IHeaderCurrentWeatherProps> = ({ weather }) => {
 
   return (
     <View
-      className={`w-full p-2 z-10 flex flex-row items-center justify-between bg-gray-700/50 rounded-3xl`}
+      className={`w-full p-2 z-10 flex flex-row items-center justify-between bg-headerCurrentWeatherBcg rounded-3xl`}
       style={{
         position: "absolute",
         right: 0,

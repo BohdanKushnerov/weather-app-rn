@@ -1,18 +1,9 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 import GoBackBtn from "./BackBtn";
-
-type RootStackParamList = {
-  SearchWeather: { cityName: string };
-};
-
-interface IHeaderNastedScreensProps {
-  navigation: StackNavigationProp<RootStackParamList, "SearchWeather">;
-  title: string;
-}
+import { IHeaderNastedScreensProps } from "@interfaces/IHeaderNastedScreensProps";
 
 const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
   navigation,
@@ -22,7 +13,7 @@ const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
 
   return (
     <View
-      className="bg-green-200"
+      className="bg-secondaryBcg"
       style={{
         paddingTop: insets.top,
       }}

@@ -11,15 +11,10 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 
 import LoaderComponent from "@components/LoaderComponent";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
-import { ISearchLocation } from "@interfaces/ISearchLocation";
+import { useWeatherContext } from "@context/WeatherContext";
+import { ISavedLocations } from "@interfaces/ISavedLocations";
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
-
-interface ISavedLocations {
-  savedLocations: ISearchLocation[] | null;
-  keyboardHide: () => void;
-  handleDeleteCityFromStorage: (name: string, region: string) => Promise<void>;
-}
 
 const SavedSearchLocations: FC<ISavedLocations> = ({
   savedLocations,
@@ -48,7 +43,7 @@ const SavedSearchLocations: FC<ISavedLocations> = ({
           {savedLocations.length > 0 && (
             <TouchableOpacity
               className={`absolute top-1 right-0 py-2 px-4 flex-row gap-x-1 border rounded-md ${
-                isEdit && "border-red-500"
+                isEdit && "border-primaryRed"
               }`}
               onPress={() => {
                 keyboardHide();
@@ -58,7 +53,7 @@ const SavedSearchLocations: FC<ISavedLocations> = ({
               <Entypo name="edit" size={16} color={isEdit ? "red" : "black"} />
               <Text
                 className={`font-[SoraSemiBold] text-base tracking-[0.25px] leading-5 ${
-                  isEdit && "text-red-500 border-red-500"
+                  isEdit && "text-primaryRed border-primaryRed"
                 }`}
               >
                 Edit
@@ -78,7 +73,7 @@ const SavedSearchLocations: FC<ISavedLocations> = ({
             {savedLocations?.map((loc) => {
               return (
                 <View
-                  className="flex-row justify-between bg-green-200 rounded-xl border border-green-400"
+                  className="flex-row justify-between bg-secondaryBcg rounded-xl border border-primaryGreen"
                   key={loc.name}
                 >
                   <TouchableOpacity
@@ -118,7 +113,7 @@ const SavedSearchLocations: FC<ISavedLocations> = ({
                   {isEdit && (
                     <TouchableOpacity
                       className={`w-[15%] flex justify-center items-center py-2 rounded-md border ${
-                        isEdit && "bg-red-50 border-red-500"
+                        isEdit && "bg-deleteCityBtnBcg border-primaryRed"
                       }`}
                       onPress={() =>
                         handleDeleteCityFromStorage(loc.name, loc.region)

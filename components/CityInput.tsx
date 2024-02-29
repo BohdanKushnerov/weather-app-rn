@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import {
   ActivityIndicator,
   TextInput,
@@ -7,11 +7,7 @@ import {
 } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 
-interface ICityInputProps {
-  isLoading: boolean;
-  city: string;
-  handleChangeCity: (search: string, resetLocations?: boolean) => void;
-}
+import { ICityInputProps } from "@interfaces/ICityInputProps";
 
 const CityInput: FC<ICityInputProps> = ({
   isLoading,
@@ -30,7 +26,7 @@ const CityInput: FC<ICityInputProps> = ({
         onChangeText={handleChangeCity}
         placeholder="Search city"
         placeholderTextColor="white"
-        className="w-full pl-6 h-14 pb-1 flex-1 text-base rounded-xl border bg-slate-500 font-[SoraBold] placeholder:text-2xl text-white"
+        className="w-full pl-6 h-14 pb-1 flex-1 text-base rounded-xl border bg-slate-500 font-[SoraBold] placeholder:text-xl text-white"
       />
 
       {isLoading && (
