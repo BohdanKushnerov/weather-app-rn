@@ -53,16 +53,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  // const windowDimensions = useWindowDimensions();
-  // const insets = useSafeAreaInsets();
-
-  // const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   const [paramCity, setParamCity] = useState("");
 
-  // const qwe = useWeatherContext()
-
-  // console.log('qwe', qwe)
+  console.log("weather", weather);
+  console.log("tomorrowWeather", tomorrowWeather);
 
   useEffect(() => {
     if (params) {

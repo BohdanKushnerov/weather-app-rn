@@ -17,7 +17,6 @@ const TomorrowAdditionalWeather: FC<ITomorrowAdditionalWeatherProps> = ({
   tomorrowWeather,
   selectedWeather,
 }) => {
-
   // console.log("tomorrowWeather",tomorrowWeather?.forecast.forecastday);
   return (
     <View
@@ -33,11 +32,12 @@ const TomorrowAdditionalWeather: FC<ITomorrowAdditionalWeatherProps> = ({
         selectedWeather={selectedWeather}
       />
 
+      {/* нету на бесплатном плане на завтра*/}
       {tomorrowWeather ? (
-        <AirQuality
-          airQuality={tomorrowWeather?.forecast.forecastday[0].day.air_quality}
-        />
-        // <Text>qweq</Text>
+        // <AirQuality
+        //   airQuality={tomorrowWeather?.forecast.forecastday[0].day.air_quality}
+        // />
+        <></>
       ) : (
         <LoaderComponent />
       )}

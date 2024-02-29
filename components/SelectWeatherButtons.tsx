@@ -41,7 +41,7 @@ const SelectWeatherButtons: FC<ISelectWeatherButtonsProps> = ({
         onPress={() => handleSelectWeather(Weather.TenDays)}
       >
         <Text className="font-[SoraMedium] text-lg tracking-[0.25px]">
-          10 days
+          {/* 10 days */}3 days
         </Text>
       </TouchableOpacity>
     </View>
