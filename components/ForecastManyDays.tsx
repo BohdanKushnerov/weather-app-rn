@@ -1,17 +1,14 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { useWeatherContext } from "@context/WeatherContext";
 import { getFormattedDayName } from "@utils/getFormattedDayName";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { IForecastManyDaysProps } from "@interfaces/IForecastManyDaysProps";
 import { IForecastDay } from "@interfaces/IForecastDay";
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
-interface IForecastTenDaysProps {
-  weather: IForecastWeather | null;
-}
-
-const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
+const ForecastManyDays: FC<IForecastManyDaysProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();
 
   return (
@@ -40,14 +37,14 @@ const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
                   return (
                     <View
                       key={index}
-                      className="flex-row justify-between items-center rounded-3xl p-[16px] bg-green-200"
+                      className="flex-row justify-between items-center rounded-3xl p-[16px] bg-secondaryBcg"
                     >
                       <View className="flex-1 flex-row justify-between items-center">
                         <View>
                           <Text className="font-[SoraMedium] text-black text-base">
                             {getFormattedDayName(item.date)}
                           </Text>
-                          <Text className="font-[SoraMedium] max-w-[20vh] text-zinc-500">
+                          <Text className="font-[SoraMedium] max-w-[20vh] text-primaryTextZinc">
                             {item.day.condition.text}
                           </Text>
                         </View>
@@ -102,4 +99,4 @@ const ForecastTenDays: FC<IForecastTenDaysProps> = ({ weather }) => {
   );
 };
 
-export default ForecastTenDays;
+export default ForecastManyDays;

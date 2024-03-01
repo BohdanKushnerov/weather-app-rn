@@ -1,23 +1,18 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { ISearchLocation } from "@interfaces/ISearchLocation";
+import { ISearchCitiesListProps } from "@interfaces/ISearchCitiesListProps";
 
-interface ICitiesListProps {
-  searchLocations: ISearchLocation[];
-  handleClickLocation: (location: ISearchLocation) => void;
-}
-
-const CitiesList: FC<ICitiesListProps> = ({
+const SearchCitiesList: FC<ISearchCitiesListProps> = ({
   searchLocations,
   handleClickLocation,
 }) => {
   return (
-    <View className="absolute top-14 z-10 w-full bg-gray-300 rounded-3xl border shadow shadow-black">
+    <View className="absolute top-14 z-10 w-full bg-searchCitiesListBcg rounded-3xl border shadow shadow-black">
       {searchLocations.map((loc, index) => {
         const showBorder = index + 1 != searchLocations.length;
-        const borderClass = showBorder ? " border-b-2 border-b-gray-400" : "";
+        const borderClass = showBorder ? "border-b-2 border-b-primaryGray" : "";
         return (
           <TouchableOpacity
             key={index}
@@ -44,4 +39,4 @@ const CitiesList: FC<ICitiesListProps> = ({
   );
 };
 
-export default CitiesList;
+export default SearchCitiesList;

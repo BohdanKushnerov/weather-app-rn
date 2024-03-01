@@ -17,7 +17,7 @@ import WeatherMainInfoWithBackground from "@components/WeatherMainInfoWithBackgr
 import ScrollUpBtn from "@components/ScrollUpBtn";
 import TodayAdditionalWeather from "@components/TodayAdditionalWeather";
 import TomorrowAdditionalWeather from "@components/TomorrowAdditionalWeather";
-import ForecastTenDays from "@components/ForecastTenDays";
+import ForecastManyDays from "@components/ForecastManyDays";
 import { fetchWeatherCurrent, fetchWeatherForecast } from "@api/weather";
 import { getCurrentLocation } from "@utils/getCurrentLocation";
 import { IForecastDay } from "@interfaces/IForecastDay";
@@ -53,16 +53,11 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  // const windowDimensions = useWindowDimensions();
-  // const insets = useSafeAreaInsets();
-
-  // const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
 
   const [paramCity, setParamCity] = useState("");
 
-  // const qwe = useWeatherContext()
-
-  // console.log('qwe', qwe)
+  console.log("weather", weather);
+  console.log("tomorrowWeather", tomorrowWeather);
 
   useEffect(() => {
     if (params) {
@@ -268,7 +263,7 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
   };
 
   return (
-    <View className="relative bg-green-100">
+    <View className="relative bg-mainBcg">
       {/* goSearch + menu */}
       <HeaderCurrentWeather weather={weather} />
 
@@ -312,9 +307,9 @@ const CurrentWeather: FC<ICurrentWeatherProps> = ({ route: { params } }) => {
           />
         )}
 
-        {/* 10 days  */}
+        {/* 3/10 days  */}
         {selectedWeather === Weather.TenDays && (
-          <ForecastTenDays weather={tenDaysWeather} />
+          <ForecastManyDays weather={tenDaysWeather} />
         )}
 
         <StatusBar style="light" />

@@ -2,9 +2,7 @@ import React, { FC } from "react";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-interface IScrollUpBtnProps {
-  scrollToTop: () => void;
-}
+import { IScrollUpBtnProps } from "@interfaces/IScrollUpBtnProps";
 
 const ScrollUpBtn: FC<IScrollUpBtnProps> = ({ scrollToTop }) => {
   return (

@@ -1,21 +1,20 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { useWeatherContext } from "@context/WeatherContext";
 import { formatDate } from "@utils/formatDate";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { ITomorrowWeatherMainInfoProps } from "@interfaces/ITomorrowWeatherMainInfoProps";
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
-interface ITomorrowCityWeatherProps {
-  weather: IForecastWeather | null;
-}
-
-const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
+const TomorrowWeatherMainInfo: FC<ITomorrowWeatherMainInfoProps> = ({
+  weather,
+}) => {
   const { weatherSettings } = useWeatherContext();
 
   return (
     <>
       {weather ? (
-        <View className="flex flex-col justify-end h-full p-[16px]">
+        <View className="flex flex-col justify-end h-full p-[16px] bg-mainInfoBcg">
           <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
@@ -80,4 +79,4 @@ const TomorrowCityWeather: FC<ITomorrowCityWeatherProps> = ({ weather }) => {
   );
 };
 
-export default TomorrowCityWeather;
+export default TomorrowWeatherMainInfo;

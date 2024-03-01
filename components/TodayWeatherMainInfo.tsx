@@ -1,23 +1,18 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { useWeatherContext } from "@context/WeatherContext";
 import { formatDate } from "@utils/formatDate";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { ITodayWeatherMainInfoProps } from "@interfaces/ITodayWeatherMainInfoProps";
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
-interface ILocationCityWeatherInfoProps {
-  weather: IForecastWeather | null;
-}
-
-const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
-  weather,
-}) => {
+const TodayWeatherMainInfo: FC<ITodayWeatherMainInfoProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();
 
   return (
     <>
       {weather ? (
-        <View className="flex flex-col justify-end h-full p-[16px] bg-gray-700/20">
+        <View className="flex flex-col justify-end h-full p-[16px] bg-mainInfoBcg">
           <View className="flex-col gap-y-[25%]">
             <View className="flex-row justify-between items-end">
               <View className="flex-col">
@@ -84,4 +79,4 @@ const LocationCityWeatherInfo: FC<ILocationCityWeatherInfoProps> = ({
   );
 };
 
-export default LocationCityWeatherInfo;
+export default TodayWeatherMainInfo;

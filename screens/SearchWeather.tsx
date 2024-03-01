@@ -11,9 +11,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CityInput from "@components/CityInput";
-import CitiesList from "@components/CitiesList";
+import SearchCitiesList from "@components/SearchCitiesList";
 import MyLocationWeather from "@components/MyLocationWeather";
-import SavedLocations from "@components/SavedSearchLocations";
+import SavedSearchLocations from "@components/SavedSearchLocations";
 import {
   fetchCurrentForecast,
   fetchCurrentForecastLocation,
@@ -45,10 +45,9 @@ const tempFn = async (city: string) => {
 };
 
 const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [myLocationWeather, setMyLocationWeather] =
     useState<IForecastWeather | null>(null);
-  const [savedLocations, setSavedLocations] = useState<
+  const [searchedCities, setSearchedCities] = useState<
     ISearchLocation[] | null
   >(null);
   const [city, setCity] = useState("");
@@ -60,20 +59,6 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const windowDimensions = useWindowDimensions();
   const { width: dimensionsWidth, height: dimensionsHeigth } = windowDimensions;
-
-  useEffect(() => {
-    const showSubBtns = Keyboard.addListener("keyboardDidShow", () => {
-      setIsShowKeyboard(true);
-    });
-    const hideSubBtns = Keyboard.addListener("keyboardDidHide", () => {
-      setIsShowKeyboard(false);
-    });
-
-    return () => {
-      showSubBtns.remove();
-      hideSubBtns.remove();
-    };
-  }, []);
 
   useEffect(() => {
     const getMyLocation = async () => {
@@ -95,7 +80,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const getSavedLocations = async () => {
+    const getSearchedCities = async () => {
       const existingDataString: string | null = await AsyncStorage.getItem(
         "search-history"
       );
@@ -116,15 +101,15 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
             return { ...city, ...temp };
           });
 
-          const cityInfo = await Promise.all(weatherPromises);
-          setSavedLocations(cityInfo);
+          const citiesInfo = await Promise.all(weatherPromises);
+          setSearchedCities(citiesInfo);
         };
 
         fetchDataForSavedLocations();
       }
     };
 
-    getSavedLocations();
+    getSearchedCities();
   }, []);
 
   useEffect(() => {
@@ -188,32 +173,30 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
 
   const handleDeleteCityFromStorage = async (name: string, region: string) => {
     // AsyncStorage.removeItem("search-history");
-    if (savedLocations) {
-      const newArr = savedLocations.filter(
+    if (searchedCities) {
+      const newSearchedCities = searchedCities.filter(
         (city) => city.name !== name && city.region !== region
       );
-      setSavedLocations([...newArr]);
+      setSearchedCities([...newSearchedCities]);
       // console.log("newArr", newArr);
-      const jsonValue = JSON.stringify(newArr);
+      const jsonValue = JSON.stringify(newSearchedCities);
       await AsyncStorage.setItem("search-history", jsonValue);
     }
   };
 
   const keyboardHide = () => {
-    // setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View
-        className="bg-green-100"
+        className="bg-mainBcg"
         style={{
           height: dimensionsHeigth - 64 - insets.top,
           width: dimensionsWidth,
           paddingHorizontal: 8,
           paddingTop: 8,
-          // paddingBottom: 8,
         }}
       >
         <View className="flex-1 relative">
@@ -223,7 +206,7 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
             handleChangeCity={handleChangeCity}
           />
           {searchLocations && searchLocations.length > 0 ? (
-            <CitiesList
+            <SearchCitiesList
               searchLocations={searchLocations}
               handleClickLocation={handleClickLocation}
             />
@@ -231,8 +214,8 @@ const SearchWeather: FC<ISearchWeatherProps> = ({ navigation }) => {
 
           <MyLocationWeather myLocationWeather={myLocationWeather} />
 
-          <SavedLocations
-            savedLocations={savedLocations}
+          <SavedSearchLocations
+            savedLocations={searchedCities}
             keyboardHide={keyboardHide}
             handleDeleteCityFromStorage={handleDeleteCityFromStorage}
           />

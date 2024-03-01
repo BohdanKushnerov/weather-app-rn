@@ -1,17 +1,14 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
 
 import LoaderComponent from "@components/LoaderComponent";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { useWeatherContext } from "@context/WeatherContext";
+import { IMyLocationWeather } from "@interfaces/IMyLocationWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
-
-interface IMyLocationWeather {
-  myLocationWeather: IForecastWeather | null;
-}
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
 const MyLocationWeather: FC<IMyLocationWeather> = ({ myLocationWeather }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -27,7 +24,7 @@ const MyLocationWeather: FC<IMyLocationWeather> = ({ myLocationWeather }) => {
       </View>
       {myLocationWeather ? (
         <TouchableOpacity
-          className="w-full flex-row justify-between items-center py-2 px-4 bg-gray-300 rounded-md border"
+          className="w-full flex-row justify-between items-center py-2 px-4 bg-myLocationBcg rounded-md border"
           onPress={() =>
             navigation.navigate("CurrentWeather", {
               cityName: myLocationWeather?.location.name,
@@ -48,7 +45,6 @@ const MyLocationWeather: FC<IMyLocationWeather> = ({ myLocationWeather }) => {
             </View>
           </View>
           <Text className="font-[SoraBold] text-2xl tracking-[0.25px] leading-10">
-            {/* {myLocationWeather?.current.temp_c}&#176; */}
             {weatherSettings.temp === TemperatureUnit.Celsius
               ? myLocationWeather?.current.temp_c
               : myLocationWeather?.current.temp_f}{" "}

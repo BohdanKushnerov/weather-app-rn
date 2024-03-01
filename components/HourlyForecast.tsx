@@ -1,18 +1,14 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import LoaderComponent from "./LoaderComponent";
-import { TemperatureUnit, useWeatherContext } from "@context/WeatherContext";
+import { useWeatherContext } from "@context/WeatherContext";
 import { getTime } from "@utils/getTime";
+import { IHourlyForecastProps } from "@interfaces/IHourlyForecastProps";
 import { IWeatherHour } from "@interfaces/IWeatherHour";
-import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
-
-interface IHourlyForecastProps {
-  weather: IForecastWeather | null;
-  selectedWeather: Weather;
-}
+import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
 const HourlyForecast: FC<IHourlyForecastProps> = ({
   weather,
@@ -50,7 +46,7 @@ const HourlyForecast: FC<IHourlyForecastProps> = ({
   return (
     <>
       {weather ? (
-        <View className="mx-[16px] px-[16px] py-[8px] bg-green-200 rounded-3xl">
+        <View className="mx-[16px] px-[16px] py-[8px] bg-secondaryBcg rounded-3xl">
           <View className="flex-row items-center gap-2">
             <View className="p-1 bg-white rounded-full">
               <MaterialCommunityIcons name="hours-24" size={24} color="black" />

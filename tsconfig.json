@@ -13,9 +13,6 @@
       "@customTypes/*": ["./customTypes/*"],
       "@context/*": ["./context/*"]
     }
-    // "paths": {
-    //   "@/*": ["*"]
-    // }
   },
   "include": [
     "my-app.d.ts",
