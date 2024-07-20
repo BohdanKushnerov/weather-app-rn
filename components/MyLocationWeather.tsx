@@ -6,11 +6,17 @@ import { Entypo } from "@expo/vector-icons";
 
 import LoaderComponent from "@components/LoaderComponent";
 import { useWeatherContext } from "@context/WeatherContext";
-import { IMyLocationWeather } from "@interfaces/IMyLocationWeather";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 
-const MyLocationWeather: FC<IMyLocationWeather> = ({ myLocationWeather }) => {
+interface IMyLocationWeatherProps {
+  myLocationWeather: IForecastWeather | null;
+}
+
+const MyLocationWeather: FC<IMyLocationWeatherProps> = ({
+  myLocationWeather,
+}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { weatherSettings } = useWeatherContext();
 

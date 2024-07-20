@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";

@@ -5,9 +5,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
 import { Fontisto } from "@expo/vector-icons";
 
-import { ICityInputProps } from "@interfaces/ICityInputProps";
+interface ICityInputProps {
+  isLoading: boolean;
+  city: string;
+  handleChangeCity: (search: string, resetLocations?: boolean) => void;
+}
 
 const CityInput: FC<ICityInputProps> = ({
   isLoading,

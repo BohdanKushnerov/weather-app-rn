@@ -1,8 +1,12 @@
 import React, { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { ISelectWeatherButtonsProps } from "@interfaces/ISelectWeatherButtonsProps";
 import { Weather } from "@customEnums/Weather";
+
+interface ISelectWeatherButtonsProps {
+  selectedWeather: Weather;
+  handleSelectWeather: (selectedWeather: Weather) => void;
+}
 
 const SelectWeatherButtons: FC<ISelectWeatherButtonsProps> = ({
   selectedWeather,

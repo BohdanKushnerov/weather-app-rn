@@ -11,10 +11,10 @@ import { StatusBar } from "expo-status-bar";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 
-import SelectWeatherButtons from "@components/SelectWeatherButtons";
+import SelectWeatherButtons from "@components/Buttons/SelectWeatherButtons";
 import HeaderCurrentWeather from "@components/HeaderCurrentWeather";
 import WeatherMainInfoWithBackground from "@components/WeatherMainInfoWithBackground";
-import ScrollUpBtn from "@components/ScrollUpBtn";
+import ScrollUpBtn from "@components/Buttons/ScrollUpBtn";
 import TodayAdditionalWeather from "@components/TodayAdditionalWeather";
 import TomorrowAdditionalWeather from "@components/TomorrowAdditionalWeather";
 import ForecastManyDays from "@components/ForecastManyDays";

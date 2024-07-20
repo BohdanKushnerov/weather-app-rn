@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 
-import SettingsSwitcher from "@components/SettingsSwitcher";
+import SettingsSwitcherBtn from "@components/Buttons/SettingsSwitcherBtn";
 import { useWeatherContext } from "@context/WeatherContext";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 import { DistanceUnit } from "@customEnums/DistanceUnit";
@@ -58,7 +58,7 @@ const SettingsWeather: FC = () => {
   return (
     <View className="bg-mainBcg h-screen">
       <View className="flex-col p-2">
-        <SettingsSwitcher
+        <SettingsSwitcherBtn
           name="Temperature"
           value={weatherSettings.temp === TemperatureUnit.Celsius}
           handleChange={handleChangeTempValue}
@@ -66,7 +66,7 @@ const SettingsWeather: FC = () => {
           inActiveText={TemperatureUnit.Fahrenheit}
         />
 
-        <SettingsSwitcher
+        <SettingsSwitcherBtn
           name="Distance"
           value={weatherSettings.distance === DistanceUnit.Kilometers}
           handleChange={handleChangeDistanceValue}
@@ -74,7 +74,7 @@ const SettingsWeather: FC = () => {
           inActiveText={DistanceUnit.Miles}
         />
 
-        <SettingsSwitcher
+        <SettingsSwitcherBtn
           name="Pressure"
           value={weatherSettings.pressure === PressureUnit.Millibar}
           handleChange={handleChangePressureValue}
@@ -82,7 +82,7 @@ const SettingsWeather: FC = () => {
           inActiveText={PressureUnit.InchOfMercury}
         />
 
-        <SettingsSwitcher
+        <SettingsSwitcherBtn
           name="Wind Speed"
           value={weatherSettings.windSpeed === WindSpeedUnit.KilometersPerHour}
           handleChange={handleChangeWindSpeedValue}

@@ -2,7 +2,12 @@ import React, { FC } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { ISearchCitiesListProps } from "@interfaces/ISearchCitiesListProps";
+import { ISearchLocation } from "@interfaces/ISearchLocation";
+
+interface ISearchCitiesListProps {
+  searchLocations: ISearchLocation[];
+  handleClickLocation: (location: ISearchLocation) => void;
+}
 
 const SearchCitiesList: FC<ISearchCitiesListProps> = ({
   searchLocations,

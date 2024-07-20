@@ -1,8 +1,13 @@
 import React, { FC } from "react";
 import { TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import { IGoBackBtnProps } from "@interfaces/IGoBackBtnProps";
+import { RootStackParamList } from "@customTypes/RootStackParamList";
+
+interface IGoBackBtnProps {
+  navigation: StackNavigationProp<RootStackParamList, "SearchWeather">;
+}
 
 const GoBackBtn: FC<IGoBackBtnProps> = ({ navigation }) => {
   return (

@@ -4,7 +4,13 @@ import { View } from "react-native";
 import WeatherDetails from "./WeatherDetails";
 import HourlyForecast from "./HourlyForecast";
 import LoaderComponent from "./LoaderComponent";
-import { ITomorrowAdditionalWeatherProps } from "@interfaces/ITomorrowAdditionalWeatherProps";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
+import { Weather } from "@customEnums/Weather";
+
+interface ITomorrowAdditionalWeatherProps {
+  tomorrowWeather: IForecastWeather | null;
+  selectedWeather: Weather;
+}
 
 const TomorrowAdditionalWeather: FC<ITomorrowAdditionalWeatherProps> = ({
   tomorrowWeather,

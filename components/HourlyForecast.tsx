@@ -5,10 +5,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import LoaderComponent from "./LoaderComponent";
 import { useWeatherContext } from "@context/WeatherContext";
 import { getTime } from "@utils/getTime";
-import { IHourlyForecastProps } from "@interfaces/IHourlyForecastProps";
 import { IWeatherHour } from "@interfaces/IWeatherHour";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
+
+interface IHourlyForecastProps {
+  weather: IForecastWeather | null;
+  selectedWeather: Weather;
+}
 
 const HourlyForecast: FC<IHourlyForecastProps> = ({
   weather,

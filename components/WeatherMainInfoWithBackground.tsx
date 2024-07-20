@@ -4,8 +4,14 @@ import { ImageBackground, View, useWindowDimensions } from "react-native";
 import TomorrowWeatherMainInfo from "./TomorrowWeatherMainInfo";
 import TodayWeatherMainInfo from "./TodayWeatherMainInfo";
 import { getWeatherNameBcg } from "@utils/getWeatherNameBcg";
-import { IWeatherMainInfoWithBackgroundProps } from "@interfaces/IWeatherMainInfoWithBackgroundProps";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { Weather } from "@customEnums/Weather";
+
+interface IWeatherMainInfoWithBackgroundProps {
+  weather: IForecastWeather | null;
+  tomorrowWeather: IForecastWeather | null;
+  selectedWeather: Weather;
+}
 
 const WeatherMainInfoWithBackground: FC<
   IWeatherMainInfoWithBackgroundProps
