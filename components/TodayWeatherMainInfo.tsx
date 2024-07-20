@@ -3,8 +3,12 @@ import { ActivityIndicator, Image, Text, View } from "react-native";
 
 import { useWeatherContext } from "@context/WeatherContext";
 import { formatDate } from "@utils/formatDate";
-import { ITodayWeatherMainInfoProps } from "@interfaces/ITodayWeatherMainInfoProps";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
+
+interface ITodayWeatherMainInfoProps {
+  weather: IForecastWeather | null;
+}
 
 const TodayWeatherMainInfo: FC<ITodayWeatherMainInfoProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();

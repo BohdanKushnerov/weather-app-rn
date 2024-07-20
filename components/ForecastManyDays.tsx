@@ -4,9 +4,13 @@ import { Fontisto } from "@expo/vector-icons";
 
 import { useWeatherContext } from "@context/WeatherContext";
 import { getFormattedDayName } from "@utils/getFormattedDayName";
-import { IForecastManyDaysProps } from "@interfaces/IForecastManyDaysProps";
 import { IForecastDay } from "@interfaces/IForecastDay";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
+
+interface IForecastManyDaysProps {
+  weather: IForecastWeather | null;
+}
 
 const ForecastManyDays: FC<IForecastManyDaysProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();

@@ -7,8 +7,12 @@ import { Entypo, Fontisto } from "@expo/vector-icons";
 
 import LoaderComponent from "./LoaderComponent";
 import { getTime } from "@utils/getTime";
-import { IHeaderCurrentWeatherProps } from "@interfaces/IHeaderCurrentWeatherProps";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
+
+interface IHeaderCurrentWeatherProps {
+  weather: IForecastWeather | null;
+}
 
 const HeaderCurrentWeather: FC<IHeaderCurrentWeatherProps> = ({ weather }) => {
   const insets = useSafeAreaInsets();

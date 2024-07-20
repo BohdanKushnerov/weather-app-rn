@@ -2,9 +2,15 @@ import React, { FC } from "react";
 import { Text, View } from "react-native";
 import { Switch } from "react-native-switch";
 
-import { ISettingsSwitchProps } from "@interfaces/ISettingsSwitchProps";
+interface ISettingsSwitcherBtnProps {
+  name: string;
+  value: boolean;
+  handleChange: () => void;
+  activeText: string;
+  inActiveText: string;
+}
 
-const SettingsSwitcher: FC<ISettingsSwitchProps> = ({
+const SettingsSwitcherBtn: FC<ISettingsSwitcherBtnProps> = ({
   name,
   value,
   handleChange,
@@ -47,4 +53,4 @@ const SettingsSwitcher: FC<ISettingsSwitchProps> = ({
   );
 };
 
-export default SettingsSwitcher;
+export default SettingsSwitcherBtn;

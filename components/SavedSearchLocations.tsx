@@ -12,9 +12,15 @@ import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 
 import LoaderComponent from "@components/LoaderComponent";
 import { useWeatherContext } from "@context/WeatherContext";
-import { ISavedLocations } from "@interfaces/ISavedLocations";
+import { ISearchLocation } from "@interfaces/ISearchLocation";
 import { TemperatureUnit } from "@customEnums/TemperatureUnit";
 import { RootStackParamList } from "@customTypes/RootStackParamList";
+
+interface ISavedLocations {
+  savedLocations: ISearchLocation[] | null;
+  keyboardHide: () => void;
+  handleDeleteCityFromStorage: (name: string, region: string) => Promise<void>;
+}
 
 const SavedSearchLocations: FC<ISavedLocations> = ({
   savedLocations,

@@ -1,9 +1,15 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import GoBackBtn from "./BackBtn";
-import { IHeaderNastedScreensProps } from "@interfaces/IHeaderNastedScreensProps";
+import GoBackBtn from "./Buttons/BackBtn";
+import { RootStackParamList } from "@customTypes/RootStackParamList";
+
+interface IHeaderNastedScreensProps {
+  navigation: StackNavigationProp<RootStackParamList, "SearchWeather">;
+  title: string;
+}
 
 const HeaderNastedScreens: FC<IHeaderNastedScreensProps> = ({
   navigation,

@@ -7,10 +7,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { useWeatherContext } from "@context/WeatherContext";
-import { IWeatherDetailsProps } from "@interfaces/IWeatherDetailsProps";
+import { IForecastWeather } from "@interfaces/IForecastWeather";
 import { WindSpeedUnit } from "@customEnums/WindSpeedUnit";
 import { PressureUnit } from "@customEnums/PressureUnit";
 import { DistanceUnit } from "@customEnums/DistanceUnit";
+
+interface IWeatherDetailsProps {
+  weather: IForecastWeather | null;
+}
 
 const WeatherDetails: FC<IWeatherDetailsProps> = ({ weather }) => {
   const { weatherSettings } = useWeatherContext();

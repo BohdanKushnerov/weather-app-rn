@@ -4,7 +4,11 @@ import { Entypo } from "@expo/vector-icons";
 
 import { getAirQualityInfo } from "@utils/getAirQualityInfo";
 import { formatNumber } from "@utils/formatNumber";
-import { IAirQualityProps } from "@interfaces/IAirQualityProps";
+import { IAirQuality } from "@interfaces/IAirQuality";
+
+interface IAirQualityProps {
+  airQuality: IAirQuality;
+}
 
 const AirQuality: FC<IAirQualityProps> = ({ airQuality }) => {
   const { bgColor, status } = getAirQualityInfo(airQuality["us-epa-index"]);
